@@ -16,3 +16,11 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware("requireSSL")
+	->group(function(){
+		
+		$apiVersion = config("kosan.api_version");
+		include config("kosan.api_path.$apiVersion");
+		
+	});

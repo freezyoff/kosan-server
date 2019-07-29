@@ -17,7 +17,7 @@ class CreateTableLocation extends Migration
             $table->timestamps();
             $table->bigIncrements('id');
 			$table->unsignedBigInteger('owner_id');
-			$table->uuid("uuid");
+			$table->uuid("uuid")->unique();
 			$table->string("loc_name", 50);
 			$table->string("loc_address", 100);
 			$table->string("loc_postcode", 15);

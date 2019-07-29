@@ -17,7 +17,7 @@ class CreateTableOwner extends Migration
             $table->timestamps();
             $table->bigIncrements('id');
 			$table->unsignedBigInteger('user_id');
-			$table->uuid("uuid");
+			$table->uuid("uuid")->unique();
 			$table->string("org_name", 50);
 			$table->string("org_address", 100);
 			$table->string("org_postcode", 15);
