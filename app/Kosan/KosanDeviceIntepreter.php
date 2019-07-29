@@ -43,25 +43,17 @@ class KosanDeviceIntepreter
 	public static function config_device_gpio_collections(Device $device){
 		$ENUM = config("kosan.device_io_enum");
 		
-		//scenario:
-		//1. we collect default io config first (@see ChipsetIO)
-		//2. add to $GPIO with pin as index
-		//3. we collect current device io config.
-		//4. add to $GPIO with pin as index, so previous io config will overwrite
+		//we collect current device io config (@see table device_io).
 		$GPIO = [];
-		foreach([$device->io(true)->get(), $device->io()->get()] as $io_collection){
+		foreach($device->io()->get() as $row){
 			
-			foreach($io_collection as $row){
-				
-				$GPIO[$row->pin] = self::config_device_gpio(
-										$ENUM["type"][$row->type], 
-										$row->pin, 
-										$ENUM["mode"][$row->mode], 
-										$ENUM["trigger"][$row->trigger], 
-										$row->target_pin
-									);
-				
-			}
+			$GPIO[$row->pin] = self::config_device_gpio(
+									$ENUM["type"][$row->type], 
+									$row->pin, 
+									$ENUM["mode"][$row->mode], 
+									$ENUM["trigger"][$row->trigger], 
+									$row->target_pin
+								);
 			
 		}
 		

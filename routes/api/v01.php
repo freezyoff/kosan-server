@@ -9,12 +9,12 @@ Route::middleware("kosan.device.only")
 	->group(function() use($apiVersion) {
 		
 		Route::post("register", "\App\Http\Controllers\\$apiVersion\DeviceCtrl@register");
-		//Route::post("auth", "\App\Http\Controllers\$apiVersion\DeviceCtrl@auth");
+		Route::post("auth", "\App\Http\Controllers\\$apiVersion\DeviceCtrl@auth");
 		
 		Route::middleware("kosan.device.auth")
 			->group(function(){
 				
-			//Route::post("publish", "\App\Http\Controllers\$apiVersion\DeviceCtrl@publish");
+			Route::post("publish", "\App\Http\Controllers\$apiVersion\DeviceCtrl@publish");
 			//Route::post("update", "\App\Http\Controllers\$apiVersion\DeviceCtrl@update");
 				
 			});

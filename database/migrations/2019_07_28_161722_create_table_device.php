@@ -24,6 +24,7 @@ class CreateTableDevice extends Migration
 			$table->string('api_token', 80)->unique()->nullable()->default(null);
 			$table->timestamp('api_token_expired')->nullable()->default(null);
 			$table->text("state")->nullable()->default(null);
+			$table->text("request")->nullable()->default(null);
 			
 			$table->foreign('location_id')->references('id')->on('locations');
 			$table->foreign('chipset_id')->references('id')->on('chipsets');

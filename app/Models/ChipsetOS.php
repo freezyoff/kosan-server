@@ -19,4 +19,5 @@ class ChipsetOS extends Model
 	public function chipset(){
 		return $this->belongsTo("App\Models\Chipset", "chipset_id", "id");
 	}
+	
 }

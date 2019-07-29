@@ -20,14 +20,14 @@ class KosanDeviceAuthenticate
 		
 		//if not provide bearer token, abort
 		if (!$token){
-			abort(401);
+			abort(404, "Not Found");
 		}
 		
 		//find Device by bearer token
 		//if not found, abort
 		$device = Device::findByApiToken($token);
 		if (!$device){
-			abort(401);
+			abort(404, "Not Found");
 		}
 		
         return $next($request);

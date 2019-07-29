@@ -6,7 +6,7 @@ return [
 	],
 	
 	"device"=>[
-		"api_token_lifetime"=>60*60*15
+		"api_token_lifetime"=>60*5
 	],
 	
 	"device_io_enum"=>[

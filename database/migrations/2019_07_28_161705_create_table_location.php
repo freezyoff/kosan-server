@@ -16,24 +16,17 @@ class CreateTableLocation extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->timestamps();
             $table->bigIncrements('id');
-			$table->unsignedBigInteger('owner_id');
+			$table->unsignedBigInteger('owner_user_id');
 			$table->uuid("uuid")->unique();
-			$table->string("loc_name", 50);
-			$table->string("loc_address", 100);
-			$table->string("loc_postcode", 15);
-			$table->string("loc_phone", 15);
-			$table->string("loc_phone_ext", 4)
-				->nullable()
-				->default(null)
-				->comment("loc_phone extension");
-			$table->string("pic_name", 50);
-			$table->string("pic_phone", 50);
-			$table->string("pic_phone_ext", 4)
-				->nullable()
-				->default(null)
-				->comment("pic_phone extension");
+			$table->string("name", 50);
+			$table->string("address", 100);
+			$table->string("postcode", 15);
+			$table->string("phone", 15);
+			$table->text("descriptions")->nullable()->default(null);
+			$table->unsignedBigInteger("pic_user_id")->nullable()->default(null);
 			
-			$table->foreign('owner_id')->references('id')->on('owners');
+			$table->foreign('owner_user_id')->references('id')->on('users');
+			$table->foreign('pic_user_id')->references('id')->on('users');
         });
     }
 
