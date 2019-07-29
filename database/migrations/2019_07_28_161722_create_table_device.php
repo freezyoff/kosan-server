@@ -20,9 +20,9 @@ class CreateTableDevice extends Migration
 			$table->unsignedBigInteger("chipset_id");
 			$table->string("name", 50);
 			$table->uuid("uuid")->unique()->nullable()->default(null);
-			$table->string("mac")->unique();
-			$table->string("os_hash");
+			$table->macAddress("mac")->unique();
 			$table->string('api_token', 80)->unique()->nullable()->default(null);
+			$table->timestamp('api_token_expired')->nullable()->default(null);
 			$table->text("state")->nullable()->default(null);
 			
 			$table->foreign('location_id')->references('id')->on('locations');

@@ -61,7 +61,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 		
+		//Kosan
 		'requireSSL' => \App\Http\Middleware\RequireSSL::class,
+		'kosan.device.only'=> \App\Http\Middleware\KosanDeviceOnly::class,
+		'kosan.device.auth'=> \App\Http\Middleware\KosanDeviceAuthenticate::class,
     ];
 
     /**
