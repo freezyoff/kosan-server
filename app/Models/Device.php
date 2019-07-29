@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
+use App\Models\Device\HasAdminShell;
+
 class Device extends Model
 {
+	use HasAdminShell;
+	
     protected $table = "devices";
 	
 	protected $fillable = [

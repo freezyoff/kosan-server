@@ -46,9 +46,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-		//if (\Illuminate\Support\Str::contains($request->userAgent(), "Kosan Device")){
-		//	return \App\Kosan\KosanDeviceResponse::render($exception);
-		//}
+		if (\App::environment("production")){			
+			if (\Illuminate\Support\Str::contains($request->userAgent(), "Kosan Device")){
+				return \App\Kosan\KosanDeviceResponse::render($exception);
+			}
+		}
 		
         return parent::render($request, $exception);
     }

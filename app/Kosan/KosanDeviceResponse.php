@@ -6,4 +6,9 @@ class KosanDeviceResponse{
 		return response($exception->getMessage(), $exception->getStatusCode())
 			->header("Content-Type", "text/plain");
 	}
+	
+	public static function response($code, String $plainText){
+		return response($plainText, $code)
+			->header("Content-Type", "text/plain");
+	}
 }

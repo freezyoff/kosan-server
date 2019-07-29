@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v01;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Device;
+use App\Models\DeviceShell;
 use App\Models\ChipsetOS;
 
 use App\Kosan\KosanDeviceIntepreter;
@@ -29,7 +30,7 @@ class DeviceCtrl extends Controller
 		
 		$device = Device::findByMac($mac);
 		if (!$device){ 
-			return abort(401, "Unknown Device");
+			abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
 		}
 		
 		//determind the http code
@@ -45,27 +46,26 @@ class DeviceCtrl extends Controller
 		//create response body:
 		//	- device_uuid:			-> device uuid 4
 		//	- location_uuid:		-> device location uuid 4
-		//	- owner_uuid:			-> device owner uuid 4
 		//	- api_token:			-> bearer token
 		//	- api_token_expired:	-> bearer roken expired
 		$dev_location = $device->location()->first();
 		$response  = KosanDeviceIntepreter::config_device(
 				$device->uuid, 
-				$dev_location->uuid, 
-				$dev_location->owner()->first()->uuid
+				$dev_location->uuid
 			);
 		
 		$response .= "\n";
 		$response .= KosanDeviceIntepreter::config_device_gpio_collections($device);
 		
-		return $response;
+		return KosanDeviceResponse::response($code, $response);
 	}
 	
 	/**
 	 * 	Require Body:
-	 *		- mac:	-> device mac address
-	 *		- uuid:	-> device uuid (@see #register())
-	 *		- hash:	-> sketch hash
+	 *		- mac:		-> device mac address
+	 *		- dev_uuid:	-> device uuid (@see #register())
+	 *		- loc_uuid:	-> device uuid (@see #register())
+	 *		- hash:		-> sketch hash
 	 *
 	 *	HTTP Response:
 	 *		- 401:	-> unknown mac address or uuid or hash
@@ -75,58 +75,98 @@ class DeviceCtrl extends Controller
 	 *
 	 */
 	public function auth(){
-		$mac = request("mac");
-		$uuid = request("uuid");
-		$hash = request("hash");
+		$mac 		= request("mac");
+		$dev_uuid 	= request("dev_uuid");
+		$loc_uuid 	= request("loc_uuid");
+		$hash 		= request("hash");
 		
-		$device = Device::findByCredentials(["mac"=>$mac, "uuid"=>$uuid]);
-		if (!$device || $device->uuid != $uuid){ 
-			return abort(401, "Unknown Device");
+		$device = Device::findByCredentials(["mac"=>$mac, "uuid"=>$dev_uuid]);
+		if (!$device){ 
+			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		
+		//match location uuid with given $loc_uuid
+		if ($device->location()->first()->uuid != $loc_uuid){
+			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
 		}
 		
 		//we check chipset firmware hash when on production
 		if (\App::environment("production")){
-			//find chipset os with given hash
+			
+			//match chipset os with given $hash
 			$osMatch = $device->chipset()->first()->os()->where("hash", $hash)->first();
-			if (!$osMatch){
-				return abort(401, "Unknown Device");
+			
+			if (!$osMatch || !$loc_uuid_match){
+				return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
 			}
+			
 		}
 		
 		//mac, uuid, & hash match. Valid Device
 		//return api token
+		$code = $device->isApiTokenExpired()? 201 : 200;
 		$token = $device->apiToken();
 		$response = KosanDeviceIntepreter::config_server_remote(false, false, $token["token"], $token["expired"]);
-		return $response;
+		return KosanDeviceResponse::response($code, $response);
 	}
 	
+	/**
+	 * 	Require Body:
+	 *		- mac:	-> device mac address
+	 *		- dev_uuid:	-> device uuid (@see #register())
+	 *		- loc_uuid:	-> device uuid (@see #register())
+	 *		- hash:	-> sketch hash
+	 *
+	 *	HTTP Response:
+	 *		- 401:	-> unknown mac address or uuid or hash
+	 *		- 500:	-> server error
+	 *		- 200:	-> has access request
+	 *		- 204:	-> no content or no access request
+	 *
+	 */
 	public function publish(){
-		$mac = request("mac");
-		$uuid = request("uuid");
-		$hash = request("hash");
+		$mac 		= request("mac");
+		$dev_uuid 	= request("dev_uuid");
+		$loc_uuid 	= request("loc_uuid");
+		$hash 		= request("hash");
 		
-		$device = Device::findByCredentials(["mac"=>$mac, "uuid"=>$uuid]);
-		if (!$device || $device->uuid != $uuid){ 
-			return abort(401, "Unknown Device");
+		$device = Device::findByCredentials(["mac"=>$mac, "uuid"=>$dev_uuid]);
+		if (!$device || $device->uuid != $dev_uuid){ 
+			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		
+		//match location uuid with given $loc_uuid
+		if ($device->location()->first()->uuid != $loc_uuid){
+			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
 		}
 		
 		//we check chipset firmware hash when on production
 		if (\App::environment("production")){
-			//find chipset os with given hash
+			
+			//match chipset os with given $hash
 			$osMatch = $device->chipset()->first()->os()->where("hash", $hash)->first();
-			if (!$osMatch){
-				return abort(401, "Unknown Device");
+			
+			if (!$osMatch || !$loc_uuid_match){
+				return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
 			}
+			
 		}
 		
 		//publishing
 		$device->state = request("state");
-		
-		//subscribe
-		$request = $device->command;
 		$device->save();
 		
-		//get device request
+		$accessLines = "";
+		//check if any user accessibility request
+		//TODO:
+		
+		//check if any owner or admin shell command
+		$shellLines = $device->shell_unexecuted();
+		
+		return KosanDeviceResponse::response(
+			strlen($shellLines)>0? 200 : 204, 
+			$shellLines
+		);
 	}
 	
 	public function update(){}

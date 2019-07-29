@@ -6,11 +6,10 @@ use App\Models\Device;
 
 class KosanDeviceIntepreter 
 {
-	public static function config_device($device_uuid, $location_uuid, $owner_uuid){
+	public static function config_device($device_uuid, $location_uuid){
 		$str  = "#device ";
 		$str .= strlen($device_uuid)>0? 	"--uuid=$device_uuid " : "";
 		$str .= strlen($location_uuid)>0? 	"--loc-uuid=$location_uuid " : "";
-		$str .= strlen($owner_uuid)>0? 		"--own-uuid=$owner_uuid" : "";
 		return $str;
 	}
 	
