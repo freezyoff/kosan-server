@@ -31,7 +31,8 @@ Route::prefix("test")
 				$device = \App\Models\Device::findByMAC($mac);
 				if ($device){
 					$json = [
-						"state"=> $device->state
+						"state"=> $device->state,
+						"lastUpdate"=> \Carbon\Carbon::parse($device->updated_at)->format("Y-m-d H:i:s")
 					];
 				}
 			}

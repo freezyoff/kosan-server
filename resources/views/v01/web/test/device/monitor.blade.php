@@ -17,7 +17,7 @@
 	<table width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<td width="49%">
-				<div>Device State:</div>
+				<div>Device State: <span id="last-update"></span></div>
 				<textarea id="device-state" class="scr"></textarea>
 				<div align="right">
 					<button onclick="$('#device-state').val('')">Bersihkan Layar</button>
@@ -51,6 +51,7 @@
 				   data: form.serialize(), 
 				   success: function(data){
 					   $("#device-state").val(data.state);
+					   $("#last-update").html(data.lastUpdate);
 				   }
 			 });
 		});
