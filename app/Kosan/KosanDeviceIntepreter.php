@@ -31,8 +31,8 @@ class KosanDeviceIntepreter
 		//		--trigger=		<int, signal LOW/HIGH/NOT_SET>
 		//		--target_pin=	<int, target GPIOPin or NOT_SET>
 		$line  = "#device-gpio ";
-		$line .= strlen($type)>0? "--type=$type " : "";
 		$line .= strlen($pin)>0? "--pin=$pin " : "";
+		$line .= strlen($type)>0? "--type=$type " : "";
 		$line .= strlen($mode)>0? "--mode=$mode " : "";
 		$line .= strlen($trigger)>0? "--trigger=$trigger " : "";
 		$line .= strlen($target_pin)>0? "--target_pin=$target_pin" : "";
@@ -47,8 +47,8 @@ class KosanDeviceIntepreter
 		foreach($device->io()->get() as $row){
 			
 			$GPIO[$row->pin] = self::config_device_gpio(
-									$row->pin, 
 									$ENUM["type"][$row->type], 
+									$row->pin, 
 									$ENUM["mode"][$row->mode], 
 									$ENUM["trigger"][$row->trigger], 
 									$row->target_pin
