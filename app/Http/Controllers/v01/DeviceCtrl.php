@@ -17,6 +17,7 @@ class DeviceCtrl extends Controller
 	/**
 	 * 	Require Body:
 	 *		- mac:	-> device mac address
+	 *		- hash:	-> hash
 	 *
 	 *	HTTP Response:
 	 *		- 401:	-> unknown mac address
@@ -31,6 +32,18 @@ class DeviceCtrl extends Controller
 		$device = Device::findByMac($mac);
 		if (!$device){ 
 			abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		
+		//we check chipset firmware hash when on production
+		if (\App::environment("production")){
+			
+			//match chipset os with given $hash
+			$osMatch = $device->chipset()->first()->os()->where("hash", $hash)->first();
+			
+			if (!$osMatch){
+				return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+			}
+			
 		}
 		
 		//determind the http code

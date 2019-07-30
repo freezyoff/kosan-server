@@ -47,8 +47,8 @@ class KosanDeviceIntepreter
 		foreach($device->io()->get() as $row){
 			
 			$GPIO[$row->pin] = self::config_device_gpio(
-									$ENUM["type"][$row->type], 
 									$row->pin, 
+									$ENUM["type"][$row->type], 
 									$ENUM["mode"][$row->mode], 
 									$ENUM["trigger"][$row->trigger], 
 									$row->target_pin
