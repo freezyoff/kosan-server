@@ -2,6 +2,8 @@
 
 namespace App\Models\Device;
 
+use App\Models\DeviceShell;
+
 trait HasAdminShell{
 	
 	public function shell(){
@@ -25,6 +27,14 @@ trait HasAdminShell{
 		}
 		
 		return false;
+	}
+	
+	public function shell_queueCommand($user_id, $shellCmd){
+		$shell = new DeviceShell();
+		$shell->user_id = $user_id;
+		$shell->device_id = $this->id;
+		$shell->shell = $shellCmd;
+		$shell->save();
 	}
 	
 }

@@ -11,6 +11,47 @@
 |
 */
 
+$apiVersion = config("kosan.api_version");
+
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::prefix("test")
+	->group(function() use ($apiVersion){
+		
+		Route::get('device/monitor', function() use($apiVersion){
+			return view("$apiVersion.web.test.device.monitor");
+		});
+		
+		Route::post('device/monitor', function() use($apiVersion){
+			$mac = request('device-mac');
+			$json = [];
+			if ($mac){
+				$device = \App\Models\Device::findByMAC($mac);
+				if ($device){
+					$json = [
+						"state"=> $device->state
+					];
+				}
+			}
+			
+			return response()->json($json);
+		});
+		
+		Route::post('device/shell', function(){
+			$shellCommand = request("shell");
+			$mac = request('device-mac');
+			$json = [];
+			
+			if ($mac){
+				$device = \App\Models\Device::findByMAC($mac);
+				if ($device){
+					$device->shell_queueCommand(1, $shellCommand);
+					return response()->json(["code"=>200]);
+				}
+			}
+			return response()->json(["code"=>401, "message"=>"isi Device MAC"]);
+		});
+		
+	});

@@ -19,7 +19,7 @@ Route::middleware("kosan.device.only")
 				
 			});
 		
-	});
+	});	
 	
 Route::middleware("auth:api")
 	->prefix("user")
