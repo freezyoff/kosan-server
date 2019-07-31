@@ -168,6 +168,7 @@ class DeviceCtrl extends Controller
 		//publishing
 		$device->state = request("state");
 		$device->save();
+		$device->touch();
 		
 		$accessLines = "";
 		//check if any user accessibility request
