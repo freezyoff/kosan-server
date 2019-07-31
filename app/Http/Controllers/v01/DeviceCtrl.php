@@ -166,9 +166,15 @@ class DeviceCtrl extends Controller
 		}
 		
 		//publishing
-		$device->state = request("state");
-		$device->save();
-		$device->touch();
+		//for save time efficiency, we compare the state value
+		//if no change, we just touch the updated_at field
+		if ($device->state != request("state")){
+			$device->state = request("state");
+			$device->save();
+		}
+		else{
+			$device->touch();
+		}
 		
 		$accessLines = "";
 		//check if any user accessibility request
