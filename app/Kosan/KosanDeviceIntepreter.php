@@ -22,20 +22,22 @@ class KosanDeviceIntepreter
 		return $str;
 	}
 	
-	public static function config_device_gpio($type, $pin, $mode, $trigger, $target_pin){
+	public static function config_device_gpio($type, $pin, $mode, $trigger, $target_pin, $target_signal){
 		//
 		//	#device-gpio	
 		//		--type=			<int, 0=sensor, 1=relay>
-		//		--pin=			<int, GPIOPin or NOT_SET>
-		//		--mode=			<int, GPIOPinMode or NOT_SET>
-		//		--trigger=		<int, signal LOW/HIGH/NOT_SET>
-		//		--target_pin=	<int, target GPIOPin or NOT_SET>
+		//		--pin=			<int, GPIOPin>
+		//		--mode=			<int, GPIOPinMode>
+		//		--trigger=		<int, signal LOW/HIGH>
+		//		--target_pin=	<int, target GPIOPin>
+		//		--target_signal=	<int, target GPIOPin>
 		$line  = "#device-gpio ";
 		$line .= strlen($pin)>0? "--pin=$pin " : "";
 		$line .= strlen($type)>0? "--type=$type " : "";
 		$line .= strlen($mode)>0? "--mode=$mode " : "";
 		$line .= strlen($trigger)>0? "--trigger=$trigger " : "";
 		$line .= strlen($target_pin)>0? "--target_pin=$target_pin" : "";
+		$line .= strlen($target_signal)>0? "--target_signal=$$target_signal" : "";
 		return $line;
 	}
 	
@@ -51,7 +53,8 @@ class KosanDeviceIntepreter
 									$row->pin, 
 									$ENUM["mode"][$row->mode], 
 									$ENUM["trigger"][$row->trigger], 
-									$row->target_pin
+									$row->target_pin,
+									$row->target_signal
 								);
 			
 		}

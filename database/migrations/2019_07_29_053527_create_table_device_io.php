@@ -18,12 +18,10 @@ class CreateTableDeviceIo extends Migration
             $table->bigIncrements('id');
 			$table->unsignedBigInteger('device_id');
 			$table->tinyInteger("pin")
-				->unique()
 				->comment("GPIO Pin number");
-			$table->enum("mode", ["NOT_SET", "INPUT", "OUTPUT", "INPUT_PULLUP"])
+			$table->enum("mode", ["INPUT", "OUTPUT", "INPUT_PULLUP"])
 				->default("INPUT")
 				->comment(
-					"NOT_SET: -1 " .
 					"INPUT: 0 " .
 					"OUTPUT: 1" .
 					"INPUT_PULLUP: 2"
@@ -44,7 +42,14 @@ class CreateTableDeviceIo extends Migration
 				->nullable()
 				->default(null)
 				->comment("GPIO target pin number");
-			
+			$table->enum("target_signal", ["LOW", "HIGH"])
+				->nullable()
+				->default(null)
+				->comment(
+					"LOW: 0 " .
+					"HIGH: 1"
+				);
+				
 			$table->foreign('device_id')->references('id')->on('devices');
         });
     }

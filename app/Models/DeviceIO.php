@@ -15,6 +15,7 @@ class DeviceIO extends Model
 		"type",
 		"trigger",
 		"target_pin"
+		"target_signal"
 	];
 	
 	public function device(){
