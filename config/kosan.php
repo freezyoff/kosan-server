@@ -20,9 +20,9 @@ return [
 			"SENSOR"=>0,
 			"RELAY"=>1,
 		],
-		"trigger"=>[
+		"signal"=>[
 			"LOW"=>0,
 			"HIGH"=>1,
-		],
+		]
 	],
 ];

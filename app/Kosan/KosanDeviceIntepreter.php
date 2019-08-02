@@ -52,9 +52,9 @@ class KosanDeviceIntepreter
 									$ENUM["type"][$row->type], 
 									$row->pin, 
 									$ENUM["mode"][$row->mode], 
-									$ENUM["trigger"][$row->trigger], 
+									$ENUM["signal"][$row->trigger], 
 									$row->target_pin,
-									$row->target_signal
+									$ENUM["signal"][$row->target_signal]
 								);
 			
 		}
