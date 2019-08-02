@@ -14,7 +14,7 @@ class DeviceIO extends Model
 		"mode",
 		"type",
 		"trigger",
-		"target_pin"
+		"target_pin",
 		"target_signal"
 	];
 	
