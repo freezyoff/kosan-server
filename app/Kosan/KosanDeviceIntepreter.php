@@ -29,8 +29,8 @@ class KosanDeviceIntepreter
 		//		--pin=			<int, GPIOPin>
 		//		--mode=			<int, GPIOPinMode>
 		//		--trigger=		<int, signal LOW/HIGH>
-		//		--target_pin=	<int, target GPIOPin>
-		//		--target_signal=	<int, target GPIOPin>
+		//		--target-pin=	<int, target GPIOPin>
+		//		--target-signal=	<int, target GPIOPin>
 		$line  = "#device-gpio ";
 		$line .= strlen($pin)>0? "--pin=$pin " : "";
 		$line .= strlen($type)>0? "--type=$type " : "";
@@ -54,7 +54,9 @@ class KosanDeviceIntepreter
 									$ENUM["mode"][$row->mode], 
 									$ENUM["signal"][$row->trigger], 
 									$row->target_pin,
-									$ENUM["signal"][$row->target_signal]
+									$row->target_signal==NULL? 
+										null : 
+										$ENUM["signal"][$row->target_signal]
 								);
 			
 		}
