@@ -36,8 +36,8 @@ class KosanDeviceIntepreter
 		$line .= strlen($type)>0? "--type=$type " : "";
 		$line .= strlen($mode)>0? "--mode=$mode " : "";
 		$line .= strlen($trigger)>0? "--trigger=$trigger " : "";
-		$line .= strlen($target_pin)>0? "--target_pin=$target_pin" : "";
-		$line .= strlen($target_signal)>0? "--target_signal=$$target_signal" : "";
+		$line .= strlen($target_pin)>0? "--target-pin=$target_pin" : "";
+		$line .= strlen($target_signal)>0? "--target-signal=$$target_signal" : "";
 		return $line;
 	}
 	
