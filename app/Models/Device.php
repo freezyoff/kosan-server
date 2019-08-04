@@ -22,7 +22,8 @@ class Device extends Model
 		"mac",
 		"api_token",
 		"api_token_expired",
-		"state"
+		"state",
+		"config"
 	];
 	
 	public function location(){

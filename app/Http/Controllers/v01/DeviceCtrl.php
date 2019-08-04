@@ -168,17 +168,28 @@ class DeviceCtrl extends Controller
 		//publishing
 		//for save time efficiency, we compare the state value
 		//if no change, we just touch the updated_at field
-		if ($device->state != request("state")){
-			$device->state = request("state");
+		if (request("state") || request("config")){
+			
+			if($device->state != request("state")){
+				$device->state = request("state");
+			}
+			
+			if ($device->config != request("config")){
+				$device->config = request("config");
+			}
+			
 			$device->save();
+			
 		}
 		else{
+			
 			$device->touch();
+			
 		}
 		
-		$accessLines = "";
 		//check if any user accessibility request
 		//TODO:
+		$accessLines = "";
 		
 		//check if any owner or admin shell command
 		$shellLines = $device->shell_unexecuted();
@@ -189,6 +200,26 @@ class DeviceCtrl extends Controller
 		);
 	}
 	
-	public function update(){}
+	
+	/**
+	 * 	Require Body:
+	 *		- mac:			-> device mac address
+	 *		- dev_uuid:		-> device uuid (@see #register())
+	 *		- loc_uuid:		-> device uuid (@see #register())
+	 *		- version: 		->
+	 *		- hash:			-> sketch hash
+	 *		- free-space:	->
+	 *		- 
+	 *
+	 *	HTTP Response:
+	 *		- 401:	-> unknown mac address or uuid or hash
+	 *		- 500:	-> server error
+	 *		- 200:	-> has access request
+	 *		- 204:	-> no content or no access request
+	 *
+	 */
+	public function update(){
+		
+	}
 	
 }
