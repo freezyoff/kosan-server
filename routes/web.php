@@ -32,6 +32,7 @@ Route::prefix("test")
 				if ($device){
 					$json = [
 						"state"=> $device->state,
+						"config"=> $device->config,
 						"lastUpdate"=> \Carbon\Carbon::parse($device->updated_at)->format("Y-m-d H:i:s")
 					];
 				}

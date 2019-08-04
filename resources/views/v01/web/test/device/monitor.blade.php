@@ -36,6 +36,17 @@
 				</form>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				<div>Device Config:</div>
+				<textarea id="device-config" class="scr"></textarea>
+				<div align="right">
+					<button onclick="$('#device-state').val('')">Bersihkan Layar</button>
+				</div>
+			</td>
+			<td></td>
+			<td></td>
+		</tr>
 	</table>
 </body>
 <script>
@@ -51,6 +62,7 @@
 				   data: form.serialize(), 
 				   success: function(data){
 					   $("#device-state").val(data.state);
+					   $("#device-config").val(data.config);
 					   $("#last-update").html(data.lastUpdate);
 				   }
 			 });
