@@ -11,13 +11,24 @@ class ChipsetOS extends Model
 	protected $fillable = [
 		"chipset_id",
 		"version",
-		"hash",
-		"sketch_bin",
-		"spiffs_bin"
+		"firmware_size",
+		"firmware_hash",
+		"firmware_bin",
+		"storage_size",
+		"storage_hash",
+		"storage_bin"
+	];
+	
+	protected $protected = [
+		"firmware_bin",
+		"storage_bin"
 	];
 	
 	public function chipset(){
 		return $this->belongsTo("App\Models\Chipset", "chipset_id", "id");
 	}
 	
+	public static function latest($chipset_id){
+		return self::where("chipset_id", $chipset_id)->orderBy("created_at", "desc")->first();
+	}
 }

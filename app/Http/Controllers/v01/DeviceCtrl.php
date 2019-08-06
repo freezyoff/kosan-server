@@ -203,23 +203,70 @@ class DeviceCtrl extends Controller
 	
 	/**
 	 * 	Require Body:
-	 *		- mac:			-> device mac address
-	 *		- dev_uuid:		-> device uuid (@see #register())
-	 *		- loc_uuid:		-> device uuid (@see #register())
-	 *		- version: 		->
-	 *		- hash:			-> sketch hash
-	 *		- free-space:	->
+	 *		- mac:					-> device mac address
+	 *		- dev_uuid:				-> device uuid (@see #register())
+	 *		- loc_uuid:				-> device uuid (@see #register())
+	 *		- version: 				-> sketch version
+	 *		- hash:					-> sketch hash
+	 *		- chipset:				-> chipset type ESP8266 & ESP32
+	 *		- chipset_free_space:	-> chipset free space
 	 *		- 
 	 *
 	 *	HTTP Response:
 	 *		- 401:	-> unknown mac address or uuid or hash
+	 *		- 417:	-> chipset free space not enough (update too large)
 	 *		- 500:	-> server error
-	 *		- 200:	-> has access request
-	 *		- 204:	-> no content or no access request
+	 *		- 200:	-> has update
+	 *		- 204:	-> no content / no update
 	 *
 	 */
 	public function update(){
+		$mac 		= request("mac");
+		$dev_uuid 	= request("dev_uuid");
+		$device = Device::findByCredentials(["mac"=>$mac, "uuid"=>$dev_uuid]);
 		
+		if (!$device || $device->uuid != $dev_uuid){ 
+			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		
+		//match location uuid with given $loc_uuid
+		$loc_uuid = request("loc_uuid");
+		if (!$device->location()->first() || $device->location()->first()->uuid != $loc_uuid){
+			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		
+		//match chipset os with given $hash
+		$hash = request("hash");
+		$osMatch = $device->chipset()->first()->os()->where("firmware_hash", $hash)->first();	
+		if (!$osMatch){
+			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		
+		//check chipset: 
+		$chipset = request("chipset");
+		if (!$osMatch->chipset()->first() || $osMatch->chipset()->first()->name != $chipset){
+			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		
+		//check latest 
+		//check chipset_free_space	first
+		$chipset_free_space = request("chipset_free_space");
+		$latestOS = ChipsetOS::latest($osMatch->chipset_id);
+		if ($latestOS->version == request("version") || $latestOS->firmware_hash == $hash){
+			//return response(\App::environment("production")? "No Content" : "No Update", 204);
+			return abort(204, \App::environment("production")? "No Content" : "No Update");
+		}
+		
+		if ($chipset_free_space < $latestOS->firmware_size){
+			return abort(417, \App::environment("production")? "Unauthorized" : "Not Enough Free Space");
+		}
+		
+		//return file 
+		$filename = 'update/'. md5(\Illuminate\Support\Str::random(16)).'.bin';
+		\Storage::put($filename, $latestOS->firmware_bin);
+		$headers = [ "version-hash" => $latestOS->firmware_hash ];
+		return response()->download(storage_path("app/$filename"), $latestOS->version.'.bin', $headers)->deleteFileAfterSend();
+		//return $downloadPath;
 	}
 	
 }

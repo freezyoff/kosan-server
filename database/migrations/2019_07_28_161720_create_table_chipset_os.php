@@ -18,12 +18,18 @@ class CreateTableChipsetOs extends Migration
             $table->bigIncrements('id');
 			$table->unsignedBigInteger("chipset_id");
 			$table->string("version",10);
-			$table->string("hash",100);
-			$table->binary('sketch_bin')->nullable()->default(null);
-			$table->binary('spiffs_bin')->nullable()->default(null);
+			$table->integer("firmware_size")->nullable()->default(null);
+			$table->char("firmware_hash",32)->nullable()->default(null);
+			//$table->binary('firmware_bin')->nullable()->default(null);
+			$table->integer("storage_size")->nullable()->default(null);
+			$table->char("storage_hash",32)->nullable()->default(null);
+			//$table->binary('storage_bin')->nullable()->default(null);
 			
 			$table->foreign('chipset_id')->references('id')->on('chipsets');
         });
+		
+		DB::statement("ALTER TABLE `chipset_os` ADD `firmware_bin` MEDIUMBLOB AFTER `firmware_hash`");
+		DB::statement("ALTER TABLE `chipset_os` ADD `storage_bin` MEDIUMBLOB");
     }
 
     /**

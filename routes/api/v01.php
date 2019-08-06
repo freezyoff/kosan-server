@@ -14,8 +14,8 @@ Route::middleware("kosan.device.only")
 		Route::middleware("kosan.device.auth")
 			->group(function() use($apiVersion){
 				
-			Route::post("publish", "\App\Http\Controllers\\$apiVersion\DeviceCtrl@publish");
-			//Route::post("update", "\App\Http\Controllers\$apiVersion\DeviceCtrl@update");
+				Route::post("publish", "\App\Http\Controllers\\$apiVersion\DeviceCtrl@publish");
+				Route::post("update", "\App\Http\Controllers\\$apiVersion\DeviceCtrl@update");
 				
 			});
 		
