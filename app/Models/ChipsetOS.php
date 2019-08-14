@@ -14,18 +14,43 @@ class ChipsetOS extends Model
 		"firmware_size",
 		"firmware_hash",
 		"firmware_bin",
-		"storage_size",
-		"storage_hash",
-		"storage_bin"
+		"filesystem_size",
+		"filesystem_hash",
+		"filesystem_bin"
 	];
 	
 	protected $protected = [
 		"firmware_bin",
-		"storage_bin"
+		"filesystem_bin"
 	];
+	
+	private const TYPE_FIRMWARE = 0;
+	private const TYPE_FILESYSTEM = 100;
 	
 	public function chipset(){
 		return $this->belongsTo("App\Models\Chipset", "chipset_id", "id");
+	}
+	
+	public function download($mode){
+		$filename = 'update/'. md5(\Illuminate\Support\Str::random(16)).'.bin';
+		
+		if ($mode == self::TYPE_FILESYSTEM){
+			$fileContent = $this->filesystem_bin;
+		}
+		else{
+			$fileContent = $this->firmware_bin;
+		}
+		
+		if ($fileContent){
+			\Storage::put($filename, $fileContent);
+			$headers = [ "version-hash" => $this->firmware_hash ];
+			return response()->download(
+					storage_path("app/$filename"), 
+					$this->version.'.bin', $headers
+				)->deleteFileAfterSend();
+		}
+		
+		return false;
 	}
 	
 	public static function latest($chipset_id){

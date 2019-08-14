@@ -14,8 +14,54 @@ use App\Kosan\KosanDeviceResponse;
 class DeviceCtrl extends Controller
 {
 	
+	private function findDeviceByMac($mac){
+		$device = Device::findByMac($mac);
+		if (!$device){ 
+			abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		return $device;
+	}
+	
+	private function findDeviceByCredentials($dev_mac, $dev_uuid, $loc_uuid){
+		$device = Device::findByCredentials($dev_mac, $dev_uuid, $loc_uuid);
+		if (!$device){ 
+			abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		return $device;
+	}
+	
+	private function findDeviceByApiToken(){
+		$device = Device::findByApiToken(request()->bearerToken());
+		if (!$device){ 
+			abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+		return $device;
+	}
+	
+	private function validateDeviceOSHash(Device $device, $hash){
+		//we check chipset firmware hash when on production
+		if (\App::environment("production")){
+			
+			//match chipset os with given $hash
+			$osMatch = $device->chipset()->first()->os()->where("hash", $hash)->first();
+			
+			if (!$osMatch){
+				abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+			}
+			
+		}
+	}
+	
+	private function validateDeviceChipset(Device $device, $chipset){
+		$dev_chipset = $device->chipset()->first();
+		if (!$dev_chipset || $dev_chipset->name != $chipset){
+			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
+		}
+	}
+	
+	
 	/**
-	 * 	Require Body:
+	 * 	HTTP Request Body:
 	 *		- mac:	-> device mac address
 	 *		- hash:	-> hash
 	 *
@@ -27,24 +73,8 @@ class DeviceCtrl extends Controller
 	 *
 	 */
     public function register(){
-		$mac = request("mac");
-		
-		$device = Device::findByMac($mac);
-		if (!$device){ 
-			abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-		}
-		
-		//we check chipset firmware hash when on production
-		if (\App::environment("production")){
-			
-			//match chipset os with given $hash
-			$osMatch = $device->chipset()->first()->os()->where("hash", $hash)->first();
-			
-			if (!$osMatch){
-				return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-			}
-			
-		}
+		$device = $this->findDeviceByMac(request("mac"));
+		$this->validateDeviceOSHash($device, request("hash"));
 		
 		//determind the http code
 		$code = 0;
@@ -74,11 +104,11 @@ class DeviceCtrl extends Controller
 	}
 	
 	/**
-	 * 	Require Body:
+	 * 	HTTP Request Body:
 	 *		- mac:		-> device mac address
+	 *		- hash:		-> sketch hash
 	 *		- dev_uuid:	-> device uuid (@see #register())
 	 *		- loc_uuid:	-> device uuid (@see #register())
-	 *		- hash:		-> sketch hash
 	 *
 	 *	HTTP Response:
 	 *		- 401:	-> unknown mac address or uuid or hash
@@ -88,32 +118,8 @@ class DeviceCtrl extends Controller
 	 *
 	 */
 	public function auth(){
-		$mac 		= request("mac");
-		$dev_uuid 	= request("dev_uuid");
-		$loc_uuid 	= request("loc_uuid");
-		$hash 		= request("hash");
-		
-		$device = Device::findByCredentials(["mac"=>$mac, "uuid"=>$dev_uuid]);
-		if (!$device){ 
-			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-		}
-		
-		//match location uuid with given $loc_uuid
-		if ($device->location()->first()->uuid != $loc_uuid){
-			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-		}
-		
-		//we check chipset firmware hash when on production
-		if (\App::environment("production")){
-			
-			//match chipset os with given $hash
-			$osMatch = $device->chipset()->first()->os()->where("hash", $hash)->first();
-			
-			if (!$osMatch || !$loc_uuid_match){
-				return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-			}
-			
-		}
+		$device = $this->findDeviceByCredentials(request("mac"), request("dev_uuid"), request("loc_uuid"));
+		$this->validateDeviceOSHash($device, request("hash"));
 		
 		//mac, uuid, & hash match. Valid Device
 		//return api token
@@ -124,46 +130,18 @@ class DeviceCtrl extends Controller
 	}
 	
 	/**
-	 * 	Require Body:
-	 *		- mac:	-> device mac address
-	 *		- dev_uuid:	-> device uuid (@see #register())
-	 *		- loc_uuid:	-> device uuid (@see #register())
-	 *		- hash:	-> sketch hash
+	 * 	HTTP Request Header:
+	 *		- bearer_token:	-> device auth api token
 	 *
 	 *	HTTP Response:
-	 *		- 401:	-> unknown mac address or uuid or hash
+	 *		- 401:	-> unknown api token
 	 *		- 500:	-> server error
 	 *		- 200:	-> has access request
 	 *		- 204:	-> no content or no access request
 	 *
 	 */
 	public function publish(){
-		$mac 		= request("mac");
-		$dev_uuid 	= request("dev_uuid");
-		$loc_uuid 	= request("loc_uuid");
-		$hash 		= request("hash");
-		
-		$device = Device::findByCredentials(["mac"=>$mac, "uuid"=>$dev_uuid]);
-		if (!$device || $device->uuid != $dev_uuid){ 
-			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-		}
-		
-		//match location uuid with given $loc_uuid
-		if ($device->location()->first()->uuid != $loc_uuid){
-			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-		}
-		
-		//we check chipset firmware hash when on production
-		if (\App::environment("production")){
-			
-			//match chipset os with given $hash
-			$osMatch = $device->chipset()->first()->os()->where("hash", $hash)->first();
-			
-			if (!$osMatch || !$loc_uuid_match){
-				return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-			}
-			
-		}
+		$device = $this->findDeviceByApiToken();
 		
 		//publishing
 		//for save time efficiency, we compare the state value
@@ -202,15 +180,12 @@ class DeviceCtrl extends Controller
 	
 	
 	/**
-	 * 	Require Body:
-	 *		- mac:					-> device mac address
-	 *		- dev_uuid:				-> device uuid (@see #register())
-	 *		- loc_uuid:				-> device uuid (@see #register())
+	 * 	HTTP Request Body:
 	 *		- version: 				-> sketch version
 	 *		- hash:					-> sketch hash
 	 *		- chipset:				-> chipset type ESP8266 & ESP32
 	 *		- chipset_free_space:	-> chipset free space
-	 *		- 
+	 *		- mode:					-> update mode, 100=filesystem or 0=firmware
 	 *
 	 *	HTTP Response:
 	 *		- 401:	-> unknown mac address or uuid or hash
@@ -221,52 +196,33 @@ class DeviceCtrl extends Controller
 	 *
 	 */
 	public function update(){
-		$mac 		= request("mac");
-		$dev_uuid 	= request("dev_uuid");
-		$device = Device::findByCredentials(["mac"=>$mac, "uuid"=>$dev_uuid]);
+		$hash 	 = request("hash");
+		$version = request("version");
+		$mode 	 = request("mode", false);
 		
-		if (!$device || $device->uuid != $dev_uuid){ 
-			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-		}
+		$device = $this->findDeviceByApiToken();
+		$this->validateDeviceOSHash($device, $hash);
+		$this->validateDeviceChipset($device, request("chipset"));
 		
-		//match location uuid with given $loc_uuid
-		$loc_uuid = request("loc_uuid");
-		if (!$device->location()->first() || $device->location()->first()->uuid != $loc_uuid){
-			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-		}
-		
-		//match chipset os with given $hash
-		$hash = request("hash");
-		$osMatch = $device->chipset()->first()->os()->where("firmware_hash", $hash)->first();	
-		if (!$osMatch){
-			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-		}
-		
-		//check chipset: 
-		$chipset = request("chipset");
-		if (!$osMatch->chipset()->first() || $osMatch->chipset()->first()->name != $chipset){
-			return abort(401, \App::environment("production")? "Unauthorized" : "Unknown Device");
-		}
-		
-		//check latest 
+		//check latest
 		//check chipset_free_space	first
 		$chipset_free_space = request("chipset_free_space");
-		$latestOS = ChipsetOS::latest($osMatch->chipset_id);
-		if ($latestOS->version == request("version") || $latestOS->firmware_hash == $hash){
-			//return response(\App::environment("production")? "No Content" : "No Update", 204);
-			return abort(204, \App::environment("production")? "No Content" : "No Update");
+		$latestOS = ChipsetOS::latest($device->chipset_id);
+		if ($latestOS->version == $version || $latestOS->firmware_hash == $hash){
+			abort(204, \App::environment("production")? "No Content" : "No Update");
 		}
 		
 		if ($chipset_free_space < $latestOS->firmware_size){
-			return abort(417, \App::environment("production")? "Unauthorized" : "Not Enough Free Space");
+			abort(417, \App::environment("production")? "Unauthorized" : "Not Enough Free Space");
 		}
 		
 		//return file 
-		$filename = 'update/'. md5(\Illuminate\Support\Str::random(16)).'.bin';
-		\Storage::put($filename, $latestOS->firmware_bin);
-		$headers = [ "version-hash" => $latestOS->firmware_hash ];
-		return response()->download(storage_path("app/$filename"), $latestOS->version.'.bin', $headers)->deleteFileAfterSend();
-		//return $downloadPath;
+		$response = $latestOS->download($mode);
+		if (!$response){
+			return KosanDeviceResponse::response(204, "");
+		}
+		
+		return $response;
 	}
 	
 }

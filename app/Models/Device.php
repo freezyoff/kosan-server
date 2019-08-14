@@ -84,18 +84,26 @@ class Device extends Model
 	
 	// Static function -----------------------------------
 	static function findByApiToken($apiToken){
-		return self::findByCredentials(["api_token"=>$apiToken]);
+		return self::where("api_token", $apiToken)->first();
 	}
 	
 	static function findByMAC($mac){
-		return self::findByCredentials(["mac"=>$mac]);
+		return self::where("mac", $mac)->first();
 	}
 	
-	static function findByCredentials($credentials){
-		$search = Device::orderBy("id");
-		foreach($credentials as $key=>$value){
-			$search->where($key, $value);
+	static function findByCredentials($dev_mac, $dev_uuid, $loc_uuid){
+		$search = Device::where("mac", $dev_mac)
+			->where("uuid", $dev_uuid)
+			->orderBy("id")
+			->first();
+			
+		if (!$search){
+			return false;
 		}
-		return $search->first();
+		elseif ($search->location()->first()->uuid != $loc_uuid){
+			return false;
+		}
+			
+		return $search;
 	}
 }
