@@ -25,4 +25,8 @@ return [
 			"HIGH"=>1,
 		],
 	],
+	
+	"response_headers"=>[
+		"hash"=>"Kosan-Device-OS-Hash"
+	],
 ];

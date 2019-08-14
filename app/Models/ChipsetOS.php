@@ -36,14 +36,16 @@ class ChipsetOS extends Model
 		
 		if ($mode == self::TYPE_FILESYSTEM){
 			$fileContent = $this->filesystem_bin;
+			$fileHash = $this->filesystem_hash;
 		}
 		else{
 			$fileContent = $this->firmware_bin;
+			$fileHash = $this->firmware_hash;
 		}
 		
 		if ($fileContent){
 			\Storage::put($filename, $fileContent);
-			$headers = [ "version-hash" => $this->firmware_hash ];
+			$headers = [ config("kosan.response_headers.hash") => $fileHash ];
 			return response()->download(
 					storage_path("app/$filename"), 
 					$this->version.'.bin', $headers
