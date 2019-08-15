@@ -44,54 +44,81 @@
 					<button onclick="$('#device-state').val('')">Bersihkan Layar</button>
 				</div>
 			</td>
-			<td></td>
-			<td></td>
+			<td width="1%"></td>
+			<td>
+				<div>
+					<button onclick="sendButtonCommand(12,0)" style="padding:1rem">Ch1 ON</button>
+					<button onclick="sendButtonCommand(12,1)" style="padding:1rem">Ch1 OFF</button>
+				</div>
+				<div>
+					<button onclick="sendButtonCommand(13,0)" style="padding:1rem">Ch2 ON</button>
+					<button onclick="sendButtonCommand(13,1)" style="padding:1rem">Ch2 OFF</button>
+				</div>
+				<div>
+					<button onclick="sendButtonCommand(15,0)" style="padding:1rem">Ch3 ON</button>
+					<button onclick="sendButtonCommand(15,1)" style="padding:1rem">Ch3 OFF</button>
+				</div>
+				<div>
+					<button onclick="sendButtonCommand(1,0)" style="padding:1rem">Ch4 ON</button>
+					<button onclick="sendButtonCommand(1,1)" style="padding:1rem">Ch4 OFF</button>
+				</div>
+			</td>
 		</tr>
 	</table>
 </body>
 <script>
-	$(document).ready(function(){
-		$("#fm-monitor").submit(function(event){
-			event.preventDefault();
-			
-			var form = $(this);
-
-			$.ajax({
-				   type: "POST",
-				   url: form.attr("action"),
-				   data: form.serialize(), 
-				   success: function(data){
-					   $("#device-state").val(data.state);
-					   $("#device-config").val(data.config);
-					   $("#last-update").html(data.lastUpdate);
-				   }
-			 });
-		});
-		
-		$("#fm-command").submit(function(event){
-			event.preventDefault();
-			var form = $(this);
-			$("#shell-device-mac").val($("#device-mac").val());
-			
-			$.ajax({
-				   type: "POST",
-				   url: form.attr("action"),
-				   data: form.serialize(), 
-				   beforeSend: function() {
-						$("#shell-shell").addClass("shell-send");
-					},
-				   success: function(data){
-					   if (data.code != 200){
-						   alert(data.message);
-					   }
-					   $("#shell-shell").removeClass("shell-send");
-				   }
-			 });
-		});
-		
-		setInterval(function(){
-			$("#fm-monitor").trigger("submit");
-		},3000);
+//button command
+var sendButtonCommand = function(chanel, signal){
+	var url = "{{url('test/device/button')}}" +"/"+ $("#device-mac").val() +"/"+ chanel +"/"+ signal;
+	$.ajax({
+	  url: url
+	  //success: function(){}
 	});
+}
+
+$(document).ready(function(){
+	$("#fm-monitor").submit(function(event){
+		event.preventDefault();
+		
+		var form = $(this);
+
+		$.ajax({
+			   type: "POST",
+			   url: form.attr("action"),
+			   data: form.serialize(), 
+			   success: function(data){
+				   $("#device-state").val(data.state);
+				   $("#device-config").val(data.config);
+				   $("#last-update").html(data.lastUpdate);
+			   }
+		 });
+	});
+	
+	$("#fm-command").submit(function(event){
+		event.preventDefault();
+		var form = $(this);
+		$("#shell-device-mac").val($("#device-mac").val());
+		
+		$.ajax({
+			   type: "POST",
+			   url: form.attr("action"),
+			   data: form.serialize(), 
+			   beforeSend: function() {
+					$("#shell-shell").addClass("shell-send");
+				},
+			   success: function(data){
+				   if (data.code != 200){
+					   alert(data.message);
+				   }
+				   $("#shell-shell").removeClass("shell-send");
+			   }
+		 });
+	});
+	
+	setInterval(function(){
+		$("#fm-monitor").trigger("submit");
+	},3000);
+	
+});
 </script>
 </html>

@@ -41,17 +41,24 @@ Route::prefix("test")
 						$chipset_os->firmware_size = $request->file("firmware_bin")->getSize();
 						$chipset_os->firmware_bin = file_get_contents($request->file("firmware_bin")->getRealPath());
 						$chipset_os->firmware_hash = md5($chipset_os->firmware_bin);
+						$result["firmware"] = [
+							"size"=>$chipset_os->firmware_size,
+							"hash"=>$chipset_os->firmware_hash,
+						];
 					}
 					
-					if ($request->hasFile("storage_bin")){
-						$chipset_os->storage_size = $request->file("storage_bin")->getSize();
-						$chipset_os->storage_bin = file_get_contents($request->file("storage_bin")->getRealPath());
-						$chipset_os->storage_hash = md5($chipset_os->storage_bin);
+					if ($request->hasFile("spiffs_bin")){
+						$chipset_os->filesystem_size = $request->file("spiffs_bin")->getSize();
+						$chipset_os->filesystem_bin = file_get_contents($request->file("spiffs_bin")->getRealPath());
+						$chipset_os->filesystem_hash = md5($chipset_os->filesystem_bin);
+						$result["filesystem"] = [
+							"size"=>$chipset_os->filesystem_size,
+							"hash"=>$chipset_os->filesystem_hash,
+						];
 					}
 					
 					$chipset_os->save();
-					//return redirect(request()->url());
-					return $request->file("firmware_bin")->getMimeType();
+					return $result;
 				});
 				
 			});
@@ -92,6 +99,16 @@ Route::prefix("test")
 						}
 					}
 					return response()->json(["code"=>401, "message"=>"isi Device MAC"]);
+				});
+				
+				Route::get('button/{mac}/{pin}/{signal}', function($mac, $pin, $signal){
+					if ($mac){
+						$device = \App\Models\Device::findByMAC($mac);
+						if ($device){
+							$device->shell_queueCommand(1, "#trigger-relay --pin=$pin --signal=$signal");
+							return response()->json(["code"=>200]);
+						}
+					}
 				});
 			});		
 	});
