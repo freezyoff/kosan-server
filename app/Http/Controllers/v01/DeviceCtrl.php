@@ -73,8 +73,13 @@ class DeviceCtrl extends Controller
 	 *
 	 */
     public function register(){
-		$device = $this->findDeviceByMac(request("mac"));
-		$this->validateDeviceOSHash($device, request("hash"));
+		//compability for minified version
+		//TODO: remove compability if update applied
+		$mac = 	request("mc", request("mac"));
+		$hash = request("hs", request("hash"));
+		
+		$device = $this->findDeviceByMac($mac);
+		$this->validateDeviceOSHash($device, $hash);
 		
 		//determind the http code
 		$code = 0;
@@ -118,8 +123,14 @@ class DeviceCtrl extends Controller
 	 *
 	 */
 	public function auth(){
-		$device = $this->findDeviceByCredentials(request("mac"), request("dev_uuid"), request("loc_uuid"));
-		$this->validateDeviceOSHash($device, request("hash"));
+		//compability for minified version
+		//TODO: remove compability if update applied
+		$mac = request("mc", request("mac"));
+		$device_uuid = request("du", request("dev_uuid"));
+		$location_uuid = request("lu", request("loc_uuid"));
+		
+		$device = $this->findDeviceByCredentials($mac, $device_uuid, $location_uuid);
+		$this->validateDeviceOSHash($device, request("hs", "hash"));
 		
 		//mac, uuid, & hash match. Valid Device
 		//return api token
@@ -177,8 +188,7 @@ class DeviceCtrl extends Controller
 			$shellLines
 		);
 	}
-	
-	
+		
 	/**
 	 * 	HTTP Request Body:
 	 *		- version: 				-> sketch version
@@ -196,9 +206,11 @@ class DeviceCtrl extends Controller
 	 *
 	 */
 	public function update(){
-		$hash 	 = request("hash");
-		$version = request("version");
-		$mode 	 = request("mode", false);
+		//compability for minified version
+		//TODO: remove compability if update applied
+		$hash 	 = request("hs", request("hash"));
+		$version = request("v", request("version"));
+		$mode 	 = request("m", request("mode", false));
 		
 		$device = $this->findDeviceByApiToken();
 		$this->validateDeviceOSHash($device, $hash);
