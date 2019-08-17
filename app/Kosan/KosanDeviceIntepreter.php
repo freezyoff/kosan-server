@@ -7,7 +7,7 @@ use App\Models\Device;
 class KosanDeviceIntepreter 
 {
 	public static function config_device($device_uuid, $location_uuid){
-		$str .= "\n";
+		$str  = "\n";
 		$str .= "#dv ";
 		$str .= strlen($device_uuid)>0? 	"~d=$device_uuid " : "";
 		$str .= strlen($location_uuid)>0? 	"~l=$location_uuid " : "";
@@ -16,7 +16,7 @@ class KosanDeviceIntepreter
 	}
 	
 	public static function config_server_remote($host, $port, $api_token, $api_token_expired){
-		$str .= "\n";
+		$str  = "\n";
 		$str .= "#rsvr ";
 		$str .= strlen($host)>0? 				"~h=$host " : "";
 		$str .= strlen($port)>0? 				"~p=$port " : "";
@@ -27,7 +27,7 @@ class KosanDeviceIntepreter
 	}
 	
 	public static function config_device_gpio($type, $pin, $mode, $trigger, $target_pin, $target_signal){
-		$line .= "\n";
+		$line  = "\n";
 		$line .= "#dvio ";
 		$line .= strlen($pin)>0? 			"~p=$pin " : "";
 		$line .= strlen($type)>0? 			"~y=$type " : "";
