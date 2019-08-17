@@ -216,6 +216,11 @@ class DeviceCtrl extends Controller
 		$chipset_free_space = request("cf", request("chipset_free_space"));
 		
 		$device = $this->findDeviceByApiToken();
+		
+		//notify device state monitor
+		$device->state = "#os ~m=2 ~us=".now()->timestamp;
+		$device->save();
+		
 		$this->validateDeviceOSHash($device, $hash);
 		$this->validateDeviceChipset($device, $chipset );
 		
@@ -236,9 +241,6 @@ class DeviceCtrl extends Controller
 			return KosanDeviceResponse::response(204, "");
 		}
 		
-		//before return response, we notify the device state
-		$device->state = "#os ~m=2 ~us=".now()->timestamp;
-		$device->save();
 		return $response;
 	}
 	
