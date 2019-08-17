@@ -242,7 +242,16 @@ class DeviceCtrl extends Controller
 		else{
 			
 			$latestOSUnix = \Carbon\Carbon::parse($latestOS->updated_at)->timestamp;
-			if ($compileTimestamp >= $latestOSUnix){
+			
+			//NOTE:
+			//we always have $compileTimestamp < $latestOSUnix
+			//because we have different in seconds cause by preparation time & upload time
+			//the solution is to give $compileTimestamp an offset seconds to prevent device infinite loop of update
+			//
+			
+			//offset for 1 hours different
+			$offset = 60*60;
+			if (($compileTimestamp+$offset)>= $latestOSUnix){
 				abort(204, \App::environment("production")? "No Content" : "No Update");
 			}
 			
