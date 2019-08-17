@@ -250,7 +250,7 @@ class DeviceCtrl extends Controller
 			//
 			
 			//offset for 1 hours different
-			$offset = 60*60;
+			$offset = 60*15;
 			if (($compileTimestamp+$offset)>= $latestOSUnix){
 				abort(204, \App::environment("production")? "No Content" : "No Update");
 			}
