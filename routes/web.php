@@ -105,7 +105,7 @@ Route::prefix("test")
 					if ($mac){
 						$device = \App\Models\Device::findByMAC($mac);
 						if ($device){
-							$device->shell_queueCommand(1, "#trigger-relay --pin=$pin --signal=$signal");
+							$device->shell_queueCommand(1, "#iotr ~p=$pin ~s=$signal");
 							return response()->json(["code"=>200]);
 						}
 					}

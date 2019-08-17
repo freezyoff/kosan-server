@@ -62,8 +62,8 @@ class DeviceCtrl extends Controller
 	
 	/**
 	 * 	HTTP Request Body:
-	 *		- mac:	-> device mac address
-	 *		- hash:	-> hash
+	 *		- mc | mac:		-> device mac address
+	 *		- hs | hash:	-> hash
 	 *
 	 *	HTTP Response:
 	 *		- 401:	-> unknown mac address
@@ -110,10 +110,10 @@ class DeviceCtrl extends Controller
 	
 	/**
 	 * 	HTTP Request Body:
-	 *		- mac:		-> device mac address
-	 *		- hash:		-> sketch hash
-	 *		- dev_uuid:	-> device uuid (@see #register())
-	 *		- loc_uuid:	-> device uuid (@see #register())
+	 *		- mc | mac:			-> device mac address
+	 *		- hs | hash:		-> sketch hash
+	 *		- du | dev_uuid:	-> device uuid (@see #register())
+	 *		- lu | loc_uuid:	-> device uuid (@see #register())
 	 *
 	 *	HTTP Response:
 	 *		- 401:	-> unknown mac address or uuid or hash
@@ -125,12 +125,13 @@ class DeviceCtrl extends Controller
 	public function auth(){
 		//compability for minified version
 		//TODO: remove compability if update applied
-		$mac = request("mc", request("mac"));
-		$device_uuid = request("du", request("dev_uuid"));
-		$location_uuid = request("lu", request("loc_uuid"));
+		$mac 			= request("mc", request("mac"));
+		$device_uuid 	= request("du", request("dev_uuid"));
+		$location_uuid 	= request("lu", request("loc_uuid"));
+		$hash 			= request("hs", "hash");
 		
 		$device = $this->findDeviceByCredentials($mac, $device_uuid, $location_uuid);
-		$this->validateDeviceOSHash($device, request("hs", "hash"));
+		$this->validateDeviceOSHash($device, $hash);
 		
 		//mac, uuid, & hash match. Valid Device
 		//return api token
@@ -191,11 +192,11 @@ class DeviceCtrl extends Controller
 		
 	/**
 	 * 	HTTP Request Body:
-	 *		- version: 				-> sketch version
-	 *		- hash:					-> sketch hash
-	 *		- chipset:				-> chipset type ESP8266 & ESP32
-	 *		- chipset_free_space:	-> chipset free space
-	 *		- mode:					-> update mode, 100=filesystem or 0=firmware
+	 *		- v  | version: 			-> sketch version
+	 *		- hs | hash:				-> sketch hash
+	 *		- cs | chipset:				-> chipset type ESP8266 & ESP32
+	 *		- cf | chipset_free_space:	-> chipset free space
+	 *		- m  | mode:				-> update mode, 100=filesystem or 0=firmware
 	 *
 	 *	HTTP Response:
 	 *		- 401:	-> unknown mac address or uuid or hash
@@ -208,17 +209,18 @@ class DeviceCtrl extends Controller
 	public function update(){
 		//compability for minified version
 		//TODO: remove compability if update applied
-		$hash 	 = request("hs", request("hash"));
-		$version = request("v", request("version"));
-		$mode 	 = request("m", request("mode", false));
+		$hash 	 			= request("hs", request("hash"));
+		$version 			= request("v", request("version"));
+		$mode 	 			= request("m", request("mode", false));
+		$chipset 			= request("cs", request("chipset"));
+		$chipset_free_space = request("cf", request("chipset_free_space"));
 		
 		$device = $this->findDeviceByApiToken();
 		$this->validateDeviceOSHash($device, $hash);
-		$this->validateDeviceChipset($device, request("chipset"));
+		$this->validateDeviceChipset($device, $chipset );
 		
 		//check latest
 		//check chipset_free_space	first
-		$chipset_free_space = request("chipset_free_space");
 		$latestOS = ChipsetOS::latest($device->chipset_id);
 		if ($latestOS->version == $version || $latestOS->firmware_hash == $hash){
 			abort(204, \App::environment("production")? "No Content" : "No Update");
