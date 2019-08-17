@@ -73,10 +73,8 @@ class DeviceCtrl extends Controller
 	 *
 	 */
     public function register(){
-		//compability for minified version
-		//TODO: remove compability if update applied
-		$mac = 	request("mc", request("mac"));
-		$hash = request("hs", request("hash"));
+		$mac = 	request("mc");
+		$hash = request("hs");
 		
 		$device = $this->findDeviceByMac($mac);
 		$this->validateDeviceOSHash($device, $hash);
@@ -123,12 +121,10 @@ class DeviceCtrl extends Controller
 	 *
 	 */
 	public function auth(){
-		//compability for minified version
-		//TODO: remove compability if update applied
-		$mac 			= request("mc", request("mac"));
-		$device_uuid 	= request("du", request("dev_uuid"));
-		$location_uuid 	= request("lu", request("loc_uuid"));
-		$hash 			= request("hs", "hash");
+		$mac 			= request("mc");
+		$device_uuid 	= request("du");
+		$location_uuid 	= request("lu");
+		$hash 			= request("hs");
 		
 		$device = $this->findDeviceByCredentials($mac, $device_uuid, $location_uuid);
 		$this->validateDeviceOSHash($device, $hash);
@@ -209,28 +205,50 @@ class DeviceCtrl extends Controller
 	public function update(){
 		//compability for minified version
 		//TODO: remove compability if update applied
-		$hash 	 			= request("hs", request("hash"));
-		$version 			= request("v", request("version"));
-		$mode 	 			= request("m", request("mode", false));
-		$chipset 			= request("cs", request("chipset"));
-		$chipset_free_space = request("cf", request("chipset_free_space"));
+		$version = request("v");
+		$hash 	 = request("hs");
+		
+		//change version to compile timestamp
+		$compileTimestamp	= request("ctu");
+		$mode 	 			= request("m");
+		$chipset 			= request("cs");
+		$chipset_free_space = request("cf");
 		
 		$device = $this->findDeviceByApiToken();
+		
+		$this->validateDeviceOSHash($device, $hash);
+		$this->validateDeviceChipset($device, $chipset );
 		
 		//notify device state monitor
 		$device->state = "#os ~m=2 ~us=".now()->timestamp;
 		$device->save();
 		
-		$this->validateDeviceOSHash($device, $hash);
-		$this->validateDeviceChipset($device, $chipset );
-		
-		//check latest
-		//check chipset_free_space	first
+		//check latest update timestamp
 		$latestOS = ChipsetOS::latest($device->chipset_id);
-		if ($latestOS->version == $version || $latestOS->firmware_hash == $hash){
-			abort(204, \App::environment("production")? "No Content" : "No Update");
+		
+		//TODO: remove after update applied
+		//compability only, remove after update applied
+		if ($version && $hash){
+			
+			//compability for previous version
+			//prev version send request body $version
+			if ($latestOS->version == $version || $latestOS->firmware_hash == $hash){
+				abort(204, \App::environment("production")? "No Content" : "No Update");
+			}
+			
 		}
 		
+		//latest version
+		else{
+			
+			$latestOSUnix = \Carbon\Carbon::parse($latestOS->updated_at)->timestamp;
+			if ($compileTimestamp >= $latestOSUnix){
+				abort(204, \App::environment("production")? "No Content" : "No Update");
+			}
+			
+		}
+		
+		//check chipset_free_space	first
 		if ($chipset_free_space < $latestOS->firmware_size){
 			abort(417, \App::environment("production")? "Unauthorized" : "Not Enough Free Space");
 		}
