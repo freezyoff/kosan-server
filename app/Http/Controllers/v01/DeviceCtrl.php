@@ -236,6 +236,9 @@ class DeviceCtrl extends Controller
 			return KosanDeviceResponse::response(204, "");
 		}
 		
+		//before return response, we notify the device state
+		$device->state = "#os ~m=2 ~us=".now()->timestamp;
+		$device->save();
 		return $response;
 	}
 	
