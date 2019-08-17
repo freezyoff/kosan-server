@@ -209,7 +209,7 @@ class DeviceCtrl extends Controller
 		$hash 	 = request("hs");
 		
 		//change version to compile timestamp
-		$compileTimestamp	= request("ctu");
+		$compileTimestamp	= request("ux");
 		$mode 	 			= request("m");
 		$chipset 			= request("cs");
 		$chipset_free_space = request("cf");
