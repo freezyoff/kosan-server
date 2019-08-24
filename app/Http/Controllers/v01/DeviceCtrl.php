@@ -133,7 +133,8 @@ class DeviceCtrl extends Controller
 		//return api token
 		$code = $device->isApiTokenExpired()? 201 : 200;
 		$token = $device->apiToken();
-		$response = KosanDeviceIntepreter::config_server_remote(false, false, $token["token"], $token["expired"]);
+		
+		$response .= "\n".KosanDeviceIntepreter::config_device(false, false, $token["token"], $token["expired"]);
 		return KosanDeviceResponse::response($code, $response);
 	}
 	

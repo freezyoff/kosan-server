@@ -6,20 +6,29 @@ use App\Models\Device;
 
 class KosanDeviceIntepreter 
 {
-	public static function config_device($device_uuid, $location_uuid){
+	public static function config_device($device_uuid, $location_uuid, $api_token, $api_token_expired){
 		$str  = "#dv ";
-		$str .= strlen($device_uuid)>0? 	"~d=$device_uuid " : "";
-		$str .= strlen($location_uuid)>0? 	"~l=$location_uuid " : "";
+		$str .= strlen($device_uuid)>0? 		"~d=$device_uuid " : "";
+		$str .= strlen($location_uuid)>0? 		"~l=$location_uuid " : "";
+		$str .= strlen($api_token)>0? 			"~ta=$api_token " : "";
+		$str .= strlen($api_token_expired)>0? 	"~te=$api_token_expired" : "";
+		
+		//@TODO: 
+		//compability only, removed after update device version 0.0.5
+		if ($api_token || $api_token_expired){
+			$str .= "\n";
+			$str .= "#rsvr ";
+			$str .= strlen($api_token)>0? 			"~ta=$api_token " : "";
+			$str .= strlen($api_token_expired)>0? 	"~te=$api_token_expired" : "";			
+		}
 		
 		return $str;
 	}
 	
-	public static function config_server_remote($host, $port, $api_token, $api_token_expired){
+	public static function config_server_remote($host, $port){
 		$str  = "#rsvr ";
 		$str .= strlen($host)>0? 				"~h=$host " : "";
 		$str .= strlen($port)>0? 				"~p=$port " : "";
-		$str .= strlen($api_token)>0? 			"~ta=$api_token " : "";
-		$str .= strlen($api_token_expired)>0? 	"~te=$api_token_expired" : "";
 		
 		return $str;
 	}
