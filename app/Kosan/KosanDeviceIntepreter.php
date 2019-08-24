@@ -25,14 +25,6 @@ class KosanDeviceIntepreter
 		return $str;
 	}
 	
-	public static function config_server_remote($host, $port){
-		$str  = "#rsvr ";
-		$str .= strlen($host)>0? 				"~h=$host " : "";
-		$str .= strlen($port)>0? 				"~p=$port " : "";
-		
-		return $str;
-	}
-	
 	public static function config_device_gpio($type, $pin, $mode, $trigger, $target_pin, $target_signal){
 		$line  = "#dvio ";
 		$line .= strlen($pin)>0? 			"~p=$pin " : "";
