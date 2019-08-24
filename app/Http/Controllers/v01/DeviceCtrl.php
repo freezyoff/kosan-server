@@ -97,7 +97,9 @@ class DeviceCtrl extends Controller
 		$dev_location = $device->location()->first();
 		$response  = KosanDeviceIntepreter::config_device(
 				$device->uuid, 
-				$dev_location->uuid
+				$dev_location->uuid,
+				false,
+				false
 			);
 		
 		$response .= "\n";
