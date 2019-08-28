@@ -45,14 +45,13 @@ class KosanDeviceIntepreter
 		foreach($device->io()->get() as $row){
 			
 			$GPIO[$row->pin] = self::config_device_gpio(
-									$ENUM["type"][$row->type], 
-									$row->pin, 
-									$ENUM["mode"][$row->mode], 
-									$ENUM["signal"][$row->trigger], 
+									$ENUM["type"][$row->type],
+									$row->pin,
+									$ENUM["mode"][$row->mode],
+									$ENUM["signal"][$row->trigger],
 									$row->target_pin,
-									$row->target_signal==NULL? 
-										null : 
-										$ENUM["signal"][$row->target_signal]
+									$row->target_signal==NULL? null : $ENUM["signal"][$row->target_signal],
+									$row->target_trigger_delay
 								);
 			
 		}

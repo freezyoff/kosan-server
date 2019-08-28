@@ -252,7 +252,7 @@ class DeviceCtrl extends Controller
 			//the solution is to give $compileTimestamp an offset seconds to prevent device infinite loop of update
 			//
 			
-			//offset for 1 hours different
+			//offset for 15 minutes different
 			$offset = 60*15;
 			if (($compileTimestamp+$offset)>= $latestOSUnix){
 				abort(204, \App::environment("production")? "No Content" : "No Update");

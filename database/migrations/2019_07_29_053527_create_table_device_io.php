@@ -49,6 +49,10 @@ class CreateTableDeviceIo extends Migration
 					"LOW: 0 " .
 					"HIGH: 1"
 				);
+			$table->integer("target_trigger_delay")
+				->nullable()
+				->default(null)
+				->comment("in milli seconds");
 				
 			$table->foreign('device_id')->references('id')->on('devices');
         });
