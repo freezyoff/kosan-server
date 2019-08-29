@@ -25,7 +25,7 @@ class KosanDeviceIntepreter
 		return $str;
 	}
 	
-	public static function config_device_gpio($type, $pin, $mode, $trigger, $target_pin, $target_signal){
+	public static function config_device_gpio($type, $pin, $mode, $trigger, $target_pin, $target_signal, $target_trigger_delay){
 		$line  = "#dvio ";
 		$line .= strlen($pin)>0? 			"~p=$pin " : "";
 		$line .= strlen($type)>0? 			"~y=$type " : "";
@@ -33,6 +33,7 @@ class KosanDeviceIntepreter
 		$line .= strlen($trigger)>0? 		"~r=$trigger " : "";
 		$line .= strlen($target_pin)>0? 	"~tp=$target_pin " : "";
 		$line .= strlen($target_signal)>0? 	"~ts=$target_signal" : "";
+		$line .= strlen($target_signal)>0? 	"~td=$target_trigger_delay" : "";
 		
 		return $line;
 	}
