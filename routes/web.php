@@ -11,6 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+$domain = config("app.url");
+
+Route::domain($domain)
+	->group(function(){
+		
+		Route::get('/', function () {
+			return view('welcome');
+		});
+		
+	});
+	
+
+Route::domain("services.$domain")->group(base_path("routes/web/services.php"));
