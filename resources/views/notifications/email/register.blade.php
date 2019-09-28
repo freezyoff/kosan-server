@@ -3,7 +3,7 @@
 
 Informasi akses Dashboard kamu sebagai berikut:
 @component('mail::panel')
-Username: {{$email}} 
+Username: {{$email}} <br>
 Password: {{$password}}
 @endcomponent
 

@@ -29,8 +29,8 @@ class EmailValidationService{
 		return self::query()->where('email', $email)->first();
 	}
 	
-	public static function check($email, $plain_token){
-		$validation = getRecord($email);
+	public static function verify($email, $plain_token){
+		$validation = self::getRecord($email);
 		
 		//if record not found
 		if (!$validation) {	

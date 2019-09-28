@@ -62,7 +62,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 		
 		
-		'api.only' => \App\Http\Middleware\ApiAccessOnly::class
+		'kosan>>api.only' => 		\App\Http\Middleware\ApiAccessOnly::class,
+		'kosan>>user.auth.api'=>	\App\Http\Middleware\Kosan\UserAuthWithAPI::class,
     ];
 
     /**

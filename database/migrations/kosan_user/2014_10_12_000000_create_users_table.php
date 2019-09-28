@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUsersTable extends Migration
 {
+	protected $connection = "kosan_user";
+	
+	public function getSchema(){
+		return Schema::connection($this->connection);
+	}
+	
     /**
      * Run the migrations.
      *
@@ -13,7 +19,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        $this->getSchema()->create('users', function (Blueprint $table) {
             $table->timestamps();
             $table->bigIncrements('id');
             $table->string('name');
@@ -31,6 +37,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        $this->getSchema()->dropIfExists('users');
     }
 }

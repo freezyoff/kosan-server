@@ -6,6 +6,12 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTableValidateEmail extends Migration
 {
+	protected $connection = "kosan_user";
+	
+	public function getSchema(){
+		return Schema::connection($this->connection);
+	}
+	
     /**
      * Run the migrations.
      *
@@ -13,7 +19,7 @@ class CreateTableValidateEmail extends Migration
      */
     public function up()
     {
-        Schema::create('email_validates', function (Blueprint $table) {
+        $this->getSchema()->create('email_validates', function (Blueprint $table) {
             $table->string('email')->index();
             $table->string('token')->index();
             $table->timestamp('created_at')->nullable();
@@ -27,6 +33,6 @@ class CreateTableValidateEmail extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('email_validates');
+        $this->getSchema()->dropIfExists('email_validates');
     }
 }

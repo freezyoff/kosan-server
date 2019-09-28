@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateFailedJobsTable extends Migration
 {
+	
+	protected $connection = "kosan_user";
+	
+	public function getSchema(){
+		return Schema::connection($this->connection);
+	}
+	
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateFailedJobsTable extends Migration
      */
     public function up()
     {
-        Schema::create('failed_jobs', function (Blueprint $table) {
+        $this->getSchema()->create('failed_jobs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('connection');
             $table->text('queue');
@@ -30,6 +37,6 @@ class CreateFailedJobsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('failed_jobs');
+        $this->getSchema()->dropIfExists('failed_jobs');
     }
 }
