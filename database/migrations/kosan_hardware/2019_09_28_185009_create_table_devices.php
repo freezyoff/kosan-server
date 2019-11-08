@@ -9,6 +9,7 @@ class CreateTableDevices extends Migration
 	protected $connection = "kosan_hardware";
 	
 	protected function getSchema(){
+		$this->connection = env("DB_DATABASE_KOSAN_HARDWARE", $this->connection);
 		return Schema::connection($this->connection);
 	}
 	
@@ -58,7 +59,9 @@ class CreateTableDevices extends Migration
             $table->timestamps();
             $table->bigIncrements('id');
 			$table->unsignedBigInteger('chipset_id');
-			$table->uuid('uuid');
+			$table->uuid('uuid')
+				->nullable()
+				->default(null);
 			$table->macAddress('mac');
 			$table->string('api_token', 80)
 				->nullable()

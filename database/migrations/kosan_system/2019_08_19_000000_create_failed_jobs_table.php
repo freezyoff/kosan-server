@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\Schema;
 class CreateFailedJobsTable extends Migration
 {
 	
-	protected $connection = "kosan_user";
+	protected $connection = "kosan_system";
 	
 	public function getSchema(){
+		$this->connection = env("DB_DATABASE_KOSAN_SYSTEM", $this->connection);
 		return Schema::connection($this->connection);
 	}
 	

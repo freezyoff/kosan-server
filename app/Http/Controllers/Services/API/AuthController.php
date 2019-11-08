@@ -28,9 +28,7 @@ class AuthController extends Controller
 		
 		if ($logged_in){
 			$user = Auth::user();
-			$attributes = $user->only(["id","name", "email", "api_token", "api_token_expired"]);
-			$attributes['api_token_expired'] = Carbon::parse($attributes['api_token_expired'])->timestamp;
-			return response()->json($attributes, 200);
+			return response()->json($user->toAndroidGson(), 200);
 		}
 		
 		return response()->json([], 404);

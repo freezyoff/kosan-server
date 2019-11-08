@@ -6,9 +6,10 @@ use Illuminate\Database\Migrations\Migration;
 
 class AlterTableUsersAddColumnsApiTokenAndApiTokenExpired extends Migration
 {
-	protected $connection = "kosan_user";
+	protected $connection = "kosan_system";
 	
 	public function getSchema(){
+		$this->connection = env("DB_DATABASE_KOSAN_SYSTEM", $this->connection);
 		return Schema::connection($this->connection);
 	}
 	
@@ -20,7 +21,7 @@ class AlterTableUsersAddColumnsApiTokenAndApiTokenExpired extends Migration
     public function up()
     {
         $this->getSchema()->table('users', function (Blueprint $table) {
-            $table->string('api_token')->nullable()->default(null);
+            $table->string('api_token', 100)->nullable()->default(null);
 			$table->timestamp('api_token_expired')->nullable()->default(null);
         });
     }

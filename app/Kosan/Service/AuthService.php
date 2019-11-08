@@ -10,7 +10,7 @@ class AuthService{
 	
 	public static function userLoginWithAPIToken($credentials){
 		//check if token belongs to authorized user
-		$authorizedUser = User::findByApiToken($credentials['api_token']);
+		$authorizedUser = User::findByApiToken($credentials);
 		if (!$authorizedUser){
 			return false;
 		}

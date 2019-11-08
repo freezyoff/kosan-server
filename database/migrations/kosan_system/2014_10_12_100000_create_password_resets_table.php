@@ -1,14 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateTableValidateEmail extends Migration
+class CreatePasswordResetsTable extends Migration
 {
-	protected $connection = "kosan_user";
+	
+	protected $connection = "kosan_system";
 	
 	public function getSchema(){
+		$this->connection = env("DB_DATABASE_KOSAN_SYSTEM", $this->connection);
 		return Schema::connection($this->connection);
 	}
 	
@@ -19,9 +21,9 @@ class CreateTableValidateEmail extends Migration
      */
     public function up()
     {
-        $this->getSchema()->create('email_validates', function (Blueprint $table) {
+        $this->getSchema()->create('password_resets', function (Blueprint $table) {
             $table->string('email')->index();
-            $table->string('token')->index();
+            $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
     }
@@ -33,6 +35,6 @@ class CreateTableValidateEmail extends Migration
      */
     public function down()
     {
-        $this->getSchema()->dropIfExists('email_validates');
+        $this->getSchema()->dropIfExists('password_resets');
     }
 }

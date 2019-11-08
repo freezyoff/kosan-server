@@ -38,7 +38,7 @@ class Uninstall extends Command
      */
     public function handle()
     {
-        foreach (Config::get('database.connections') as $name => $details)
+        foreach (array_reverse(Config::get('database.connections')) as $name => $details)
 		{
 			$this->info('Running migration for "' . $name . '"');
 			$this->call('migrate:rollback', array('--database' => $name, '--path' => 'database/migrations/' . $name));

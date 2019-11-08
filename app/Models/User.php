@@ -9,13 +9,27 @@ use Carbon\Carbon;
 
 class User extends BaseModel
 {
-	protected $connection = 'kosan_user';
+	protected $connection = 'kosan_system';
 	protected $table = "users";
     protected $fillable = [
 		'name',
 		'email',
-		'password'
+		'password',
+		'api_token',
+		'api_token_expired'
 	];
+	
+	public function ownedLocations(){
+		return $this->hasMany('App\Models\Location', 'owner_user_id', 'id');
+	}
+	
+	public function managedLocations(){
+		return $this->hasMany('App\Models\Location', 'pic_user_id', 'id');
+	}
+	
+	public function accessibilities(){
+		return $this->hasMany('App\Models\UserAccessibility', 'user_id', 'id');
+	}
 	
 	public function setPasswordAttribute($value){
 		$this->attributes['password'] = Hash::make($value);
@@ -49,6 +63,36 @@ class User extends BaseModel
 			$this->email_verified_at = now()->format('Y-m-d H:i:s');
 			$this->save();
 		}
+	}
+	
+	public function toAndroidGson(){
+		$ownedLocations = [];
+		foreach($this->ownedLocations as $location){
+			$ownedLocations[] = $location->toAndroidGson($this->user_id);
+		}
+		
+		$managedLocations = [];
+		foreach($this->managedLocations as $location){
+			$managedLocations[] = $location->toAndroidGson(false);
+		}
+		
+		$accessibilities = [];
+		foreach($this->accessibilities as $access){
+			if (! $access->isExpired()){
+				$accessibilities[] = $access->toAndroidGson();
+			}
+		}
+		
+		return [
+			'id'=>$this->id,
+			'name'=>$this->name,
+			'email'=>$this->email,
+			'api_token'=>$this->api_token,
+			'api_token_expired'=>Carbon::parse($this->api_token_expired)->timestamp,
+			'owned_locations'=>$ownedLocations,
+			'managed_locations'=>$managedLocations,
+			'accessibilities'=>$accessibilities
+		];
 	}
 	
 	public static function findByEmail($email){

@@ -4,7 +4,7 @@ namespace App\Http\Middleware\Kosan;
 
 use Closure;
 use App\Models\User;
-use App\Kosan\Service\UserAuthService;
+use App\Kosan\Service\AuthService;
 
 class UserAuthWithAPI
 {
@@ -20,7 +20,7 @@ class UserAuthWithAPI
 		//get bearer token
 		$bearerToken = $request->bearerToken();
 		
-		if (!$bearerToken || !UserAuthService::loginWithAPIToken($bearerToken)){
+		if (!$bearerToken || !AuthService::userLoginWithAPIToken($bearerToken)){
 			return abort(401);
 		}
 		
