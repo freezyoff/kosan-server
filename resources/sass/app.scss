@@ -1,1 +1,36 @@
-//
+@import "brand.scss";
+
+$body-bg:    #1e1e1e;
+$body-color: #efefef;
+
+$font-size-base: .9rem !default;
+$font-size-lg:   $font-size-base * 1.25;
+$font-size-sm:   $font-size-base * .875;
+
+$border-radius:    .2rem;
+$border-radius-lg: .2rem;
+$border-radius-sm: .2rem;
+
+// Remove Focus outline and shadow
+$input-btn-focus-width: 0;
+
+.cursor-pointer{cursor:pointer}
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.input-group {  
+	&.invalid{
+		> .input-group-prepend,
+		> .input-group-append {
+			> * {
+				@extend .border-danger;
+				@extend .bg-danger;
+				@extend .text-white;
+			}
+		}
+		
+		> input {
+			@extend .border-danger
+		}
+	}
+}

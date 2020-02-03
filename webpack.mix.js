@@ -11,5 +11,14 @@ const mix = require('laravel-mix');
  |
  */
 
+$_js = "";
+
 mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+	.js('resources/js/dashboard.js', 'public/js')
+	
+	//service
+	.js('resources/js/service-auth.js', 'public/js')
+	.js('resources/js/region-service.js', 'public/js');
+	
+
+mix.sass('resources/sass/app.scss', 'public/css/app.css');

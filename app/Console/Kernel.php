@@ -13,8 +13,14 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\Kosan\Migrations\Install::class,
-		\App\Console\Commands\Kosan\Migrations\Uninstall::class,
+        //\App\Console\Commands\Kosan\Migrations\Install::class,
+		//\App\Console\Commands\Kosan\Migrations\Uninstall::class,
+		
+		\App\Console\Commands\Kosan\KosanServer_Restart::class,
+		\App\Console\Commands\Kosan\Mosquitto_Restart::class,
+		\App\Console\Commands\Kosan\Mosquitto_AddUser::class,
+		
+		\App\Console\Commands\Kosan\UpdateRegionTable::class,
     ];
 
     /**

@@ -1,0 +1,22 @@
+@font-face {
+    font-family: 'strasua';
+    src: url('../font/strasua.woff2') format('woff2'),
+         url('../font/strasua.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.brand{
+	font-family:strasua !important;
+	font-weight:900;
+	font-size:2rem;
+	color:#eaa500;
+	
+	& > .unique{
+		color:#597BFF !important;
+	}
+
+}
+
+.brand-tag{font-family:strasua !important;font-size:1rem;}
+

@@ -26,8 +26,7 @@ class Install extends Command
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(){
         parent::__construct();
     }
 
@@ -36,8 +35,7 @@ class Install extends Command
      *
      * @return mixed
      */
-    public function handle()
-    {
+    public function handle(){
         foreach (Config::get('database.connections') as $name => $details)
 		{
 			$this->info('Running migration for "' . $name . '"');

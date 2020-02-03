@@ -17,7 +17,7 @@ class Authenticate extends Middleware
     {
 		if (Auth::guest()){
 			if (! $request->expectsJson()) {
-				return route('web.service.login');
+				return route('web.service.auth.login');
 			}			
 		}
     }
