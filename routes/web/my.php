@@ -4,6 +4,7 @@
  */
 
 Route::get('', function(){
+	return "my.kosan.co.id";
 	return redirect(route("web.my.dashboard"), 301);
 });
 
