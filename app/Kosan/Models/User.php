@@ -2,9 +2,12 @@
 
 namespace App\Kosan\Models;
 
-use App\User as BaseModel;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
+
+use App\User as BaseModel;
+
 
 class User extends BaseModel
 {

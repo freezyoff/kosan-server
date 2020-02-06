@@ -9,7 +9,7 @@ use Hash;
 class ResetPasswordService{
 	
 	protected static function makeRecord($email){
-		$plain_token = $random = Str::random(8);
+		$plain_token = $random = Str::random(24);
 		$hashed_token = Hash::make($plain_token);
 		
 		//save reset password request
@@ -26,6 +26,10 @@ class ResetPasswordService{
 	
 	protected static function destroyRecord($email){
 		\DB::table("password_resets")->where("email", $email)->delete();
+	}
+	
+	protected static function hasRecord($email){
+		return \DB::table("password_resets")->where('email', $email)->exists();
 	}
 	
 	public static function resolveRequest($token){
@@ -58,6 +62,10 @@ class ResetPasswordService{
 		
 	}
 	
+	public static function hasRequest($email){
+		return self::hasRecord($email);
+	}
+	
 	/**
 	 *	@return (App/Kosan/Models/User) target user by token
 	 */
@@ -70,6 +78,8 @@ class ResetPasswordService{
 		
 		$user->password = $newPwd;
 		$user->save();
+		
+		self::destroyRecord($resetRequest->email);
 		return $user;
 	}
 	

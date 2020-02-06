@@ -8,7 +8,7 @@
 	
 	@include("layout.topnav")
 	
-	<div class="pl-4 pr-4 pt-2 mt-5 mb-5">
+	<div class="container mt-5 mb-5">
 		@yield("body.content")
 		@stack("body.content")
 	</div >

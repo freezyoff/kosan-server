@@ -1,4 +1,4 @@
-<div class="card pt-1 pb-1 position-fixed d-flex d-sm-none" 
+<div class="card pt-1 pb-1 position-fixed d-flex" 
 	style="			
 		background-color:#1e1e1e;
 		border-radius:0;
@@ -10,7 +10,9 @@
 		">
 	<div class="container">
 		<div class="row">
-			<div class="col brand" style="font-size:1.5rem !important">Kos<span class="unique">a</span>n</div>
+			<div class="col brand cursor-pointer" style="font-size:1.5rem !important" 
+				onclick="window.location='{{url("")}}'">Kos<span class="unique">a</span>n
+			</div>
 			<div class="col d-flex justify-content-end align-items-center">
 				@yield("body.topnav")
 				@stack("body.topnav")

@@ -18,7 +18,7 @@ $js_upload = "file_".uniqid();
 	@endif
 	type="hidden" />
 	
-<div class="d-sm-none">
+<div class="pt-2">
 	
 	@if(isset($picture))
 		<img class="rounded-circle rounded mx-auto d-block mb-4 mt-3" width="100" src="{{$picture}}" />

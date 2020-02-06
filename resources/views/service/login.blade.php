@@ -38,6 +38,7 @@ oauth.facebook.start({
 @endpush
 
 @section('body')
+<div class="container">
     @include('service.login.login-xs-sm')
-	@include('service.login.login-md')
+</div>
 @endsection

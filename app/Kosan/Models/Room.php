@@ -9,15 +9,18 @@ class Room extends Model
     protected $connection = 'kosan_kosan';
 	protected $table = "rooms";
     protected $fillable = [
-		"created_at",
-		"updated_at",
 		"id", 
 		"location_id", 
 		"name", 
 		"rate_daily", 
 		"rate_weekly", 
-		"rate_monthly"
+		"rate_monthly",
+		"ready"
 	];
+	
+	public function isReady() : Boolean {
+		return $this->ready? true : false;
+	}
 	
 	public function facilities(){
 		return $this->belongsToMany(

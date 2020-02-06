@@ -14,7 +14,8 @@ class Location extends Model
 		"pic_user_id", 
 		"name", 
 		"address", 
-		"postcode"
+		"postcode",
+		"phone"
 	];
 	
 	public function rooms(){

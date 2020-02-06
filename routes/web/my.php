@@ -4,19 +4,19 @@
  */
 
 Route::get('', function(){
-	return "my.kosan.co.id";
 	return redirect(route("web.my.dashboard"), 301);
 });
 
 Route::prefix("dashboard")
+	->namespace('My\Web')
 	->group(function(){
 	
-	Route::get('', function(){ 
-		return redirect()->route("web.my.dashboard.accessibilities"); 
-	})->name("web.my.dashboard");
+	Route::get('', "DashboardController@landing")->name("web.my.dashboard");
 	
-	Route::namespace('My\Web')
-		->prefix('accessibilities')
+	
+	/* DEPRECATED */
+	/*
+	Route::prefix('accessibilities')
 		->group(function(){
 			
 		Route::get('', "DashboardController@accessibilitiesPage")
@@ -46,5 +46,44 @@ Route::prefix("dashboard")
 		Route::post("invite/pic", "DeviceManagerController@invitePIC")
 			->name("web.my.dashboard.device-manager.invite.pic");
 	});
+	*/
 	
 });
+
+Route::prefix("owned")
+	->namespace('My\Web')
+	->group(function(){
+		
+		Route::get("", "OwnedController@landing")
+			->name("web.my.owned");
+			
+		Route::prefix("location")
+			->group(function(){
+				Route::get("make", "Owned\LocationController@makeForm")->name("web.my.owned.make");
+				Route::post("make", "Owned\LocationController@make");
+			});
+		
+	});
+	
+Route::prefix("resource")
+	->group(function(){
+		
+		Route::prefix("region")
+			->namespace("\App\Http\Controllers\Services\Web")
+			->group(function(){
+				
+				Route::get("provinces", "ResourceRegionController@provinces")
+					->name("web.my.resource.region.provinces");
+					
+				Route::get("regencies/{province}", "ResourceRegionController@regencies")
+					->name("web.my.resource.region.regencies");
+					
+				Route::get("districts/{regency}", "ResourceRegionController@districts")
+					->name("web.my.resource.region.districts");
+				
+				Route::get("villages/{district}", "ResourceRegionController@villages")
+					->name("web.my.resource.region.villages");
+				
+			});
+		
+	});

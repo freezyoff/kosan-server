@@ -28,3 +28,7 @@ Route::domain("service.$domain")
 Route::domain("my.$domain")
 	->middleware("auth")
 	->group( base_path("routes/web/my.php") );
+
+Route::domain("owned.$domain")
+	->middleware("auth")
+	->group( base_path("routes/web/owned.php") );

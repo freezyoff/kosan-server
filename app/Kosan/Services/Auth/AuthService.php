@@ -11,7 +11,7 @@ use Str;
 use Lang;
 
 use App\Kosan\Models\User;
-use App\Kosan\Services\ResetPasswordService;
+use App\Kosan\Services\Auth\ResetPasswordService;
 use App\Notifications\RegisterEmailNotification;
 
 class AuthService{
@@ -65,13 +65,12 @@ class AuthService{
 		//with email, password
 		if (is_array($credentials)){
 			$user = User::findByEmail($credentials['email']);
-			$invalid = !$user || 
-						!ResetPasswordService::check($user, $credentials['password']) ||
-						!Hash::check($credentials['password'], $user->password);
-						
-			if ($invalid){ 
+			
+			//check credentials match
+			if ( !$user || !Hash::check($credentials['password'], $user->password) ){ 
 				return false; 
 			}
+			
 		}
 		
 		//with api token
@@ -110,7 +109,7 @@ class AuthService{
         );
     }
 	
-	public static function loginClearAttempts(Request $request)
+	public static function loginClearAttempts($request)
     {
         app(RateLimiter::class)->clear(Str::lower($request->input('email')).'|'.$request->ip());
     }
