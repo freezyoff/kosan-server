@@ -20,5 +20,12 @@
 	</div>
 </div>
 <script>
-	$('body').css('height', $(window).height());
+	$(document).ready(function(){
+		
+		$('body').css('height', $(window).height());
+		setTimeout(function(){
+			window.location = "{{$target}}"
+		}, 1000);
+		
+	});
 </script>

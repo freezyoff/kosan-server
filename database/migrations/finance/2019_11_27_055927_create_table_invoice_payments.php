@@ -20,13 +20,13 @@ class CreateTableInvoicePayments extends Migration
      */
     public function up()
     {
-        $this->getSchema()->create('invoice_payments', function (Blueprint $table) {
+        $this->getSchema()->create('payments', function (Blueprint $table) {
             $table->timestamps();
             $table->bigIncrements('id');
 			$table->unsignedBigInteger('invoices_id');
 			$table->timestamp('date')->nullable()->default(null);
 			$table->double('ammount');
-			$table->enum('method',['cash']);
+			$table->enum('method',['cash','transfer']);
 			$table->timestamp('approved_at')->nullable()->default(null);
 			$table->unsignedBigInteger('approver_user_id');
 			
@@ -42,6 +42,6 @@ class CreateTableInvoicePayments extends Migration
      */
     public function down()
     {
-        $this->getSchema()->dropIfExists('invoice_payments');
+        $this->getSchema()->dropIfExists('payments');
     }
 }

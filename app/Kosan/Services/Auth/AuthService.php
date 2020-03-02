@@ -16,51 +16,6 @@ use App\Notifications\RegisterEmailNotification;
 
 class AuthService{
 	
-	public static function createUser($credentials){
-		foreach(["name","email","password"] as $validate){
-			if (!array_key_exists($validate, $credentials)){
-				return false;
-			}
-		}
-		
-		$user = new User;
-		$user->fill($credentials);
-		$user->save();
-		
-		//add user to mosquitto passwd
-		/*
-		Artisan::call('kosan:mqtt-add-user', [
-			"pwdfile"=>	config("kosan.mqtt_password_file"),
-			"user"=>	$user->email,
-			"pwd"=>		$credentials["password"]
-		]);
-		*/
-		
-		//restart mosquitto
-		//Artisan::call('kosan:mqtt-restart',[]);
-		
-		//restart kosan server
-		//Artisan::call('kosan:kosan-server-restart',[]);
-		
-		return $user;
-	}
-	
-	public static function register($credentials){
-		$user = User::findByEmail($credentials["email"]);
-		
-		//user not exitst yet
-		if (!$user){
-			
-			//create user
-			$user = self::createUser($credentials);
-			
-			//send notification
-			$user->notify( new RegisterEmailNotification($credentials) );
-		}
-		
-		return $user;
-	}
-	
 	public static function login($credentials){
 		//with email, password
 		if (is_array($credentials)){

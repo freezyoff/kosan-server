@@ -12,6 +12,7 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" crossorigin="anonymous" />
 		@yield("styles")
 		@stack("styles")
+		@yield("style")
 		@stack("style")
 		
 		<script src="{{url('js/app.js')}}"></script>
@@ -19,7 +20,7 @@
 		@stack("script")
 		
 	</head>
-	<body @yield("body.attr", "")>
+	<body @yield("body.attr", "") @stack("body.attr", "")>
 		@yield("body")
 		@stack("body")
 		<script>

@@ -24,6 +24,7 @@ class AlterTableRoomFacilitiesRenameAndModifyColumnsSharedAndAdditional extends 
 			$table->dropColumn('value');
 			$table->dropColumn('shared');
 			$table->dropColumn('additional');
+			$table->string('varian');
 			$table->enum('type', ['p','s','a'])->comment("p: private, s: shared, a: additional");
 			$table->double("additional_cost")->nullable();
         });
@@ -36,7 +37,8 @@ class AlterTableRoomFacilitiesRenameAndModifyColumnsSharedAndAdditional extends 
      */
     public function down()
     {
-       $this->getSchema()->table('room_facilities', function (Blueprint $table) {
+		$this->getSchema()->table('room_facilities', function (Blueprint $table) {
+			$table->dropColumn('varian');
 			$table->dropColumn('type');
 			$table->dropColumn('additional_cost');
 			$table->string('value');

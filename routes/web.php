@@ -32,3 +32,10 @@ Route::domain("my.$domain")
 Route::domain("owned.$domain")
 	->middleware("auth")
 	->group( base_path("routes/web/owned.php") );
+	
+Route::prefix("test")
+	->group(function(){
+		Route::get("layout/dashboard", function(){
+			return view("layout-dashboard");
+		});
+	});

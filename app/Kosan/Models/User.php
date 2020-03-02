@@ -46,28 +46,25 @@ class User extends BaseModel
 		return Crypt::decryptString( $this->attributes['oauth_google_token'] );
 	}
 	
-	public function rooms(){
+	public function roomSubscriptions(){
 		return $this->belongsToMany(
-			"App\Kosan\Models\Room", 
-			"App\Kosan\Models\Contracts\RoomUser", 
+			"App\Kosan\Models\Room",  
+			"room_users",
 			"user_id", 
 			"room_id"
-		)->withPivot([
-			"created_at",
-			"updated_at",
-			"id",
-			"name",
-			"email",
-			"email_verified_at",
-			"password",
-			"remember_token",
-			"api_token",
-			"api_token_expired",
-		]);
+		)->using("App\Kosan\Models\Relations\RoomUser");
+	}
+	
+	public function hasRoomSubscriptions(){
+		return $this->roomSubscriptions()->count() > 0;
 	}
 	
 	public function ownedLocations(){
 		return $this->hasMany("App\Kosan\Models\Location", "owner_user_id", "id");
+	}
+	
+	public function hasOwnedLoations(){
+		return $this->ownedLocations()->count() > 0;
 	}
 	
 	public function managedLocations(){

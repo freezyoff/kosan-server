@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Console\Commands\Kosan;
+namespace App\Console\Commands\Mosquitto;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Str;
 
-class Mosquitto_AddUser extends Command
+class AddUser extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'kosan:mqtt-add-user 
-							{pwdfile : mqtt pwd file} 
+    protected $signature = 'mosquitto:adduser 
 							{user : mqtt user name} 
 							{pwd : mqtt password}';
 
@@ -43,7 +42,7 @@ class Mosquitto_AddUser extends Command
      */
     public function handle()
     {
-		$pwdFile = $this->argument("pwdfile");
+		$pwdFile = config("kosan.mqtt_password_file");
 		$user = $this->argument("user");
 		$pwd = $this->argument("pwd");
 		

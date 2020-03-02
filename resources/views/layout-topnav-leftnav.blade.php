@@ -6,20 +6,17 @@
 
 @section('body')
 	
-	<div id="topnav" class="card pt-1 pb-1 position-fixed d-flex">
+	<div id="topnav" class="card pt-1 pb-1 position-fixed d-flex" 
+		style="background-color:#1e1e1e;border-radius:0;box-shadow: 0 0 5px 1px #717171;z-index:999;width: 100%;top: 0;left: 0;">
 		<div class="container-fluid">
 			@include("layout.topnav")
 		</div>
 	</div>
+	@include("layout.leftnav")
 	
-	<div class="container mt-5 mb-5">
+	<div class="container-fluid mt-5 mb-5">
 		@yield("body.content")
 		@stack("body.content")
-	</div>
+	</div >
 	
-	<div id="bottomnav" class="card pt-1 pb-1 position-fixed d-flex">
-		<div class="container-fluid">
-			@stack("body.bottomnav")
-		</div>
-	</div>
 @endsection

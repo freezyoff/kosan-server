@@ -16,10 +16,11 @@ class Kernel extends ConsoleKernel
         //\App\Console\Commands\Kosan\Migrations\Install::class,
 		//\App\Console\Commands\Kosan\Migrations\Uninstall::class,
 		
-		\App\Console\Commands\Kosan\KosanServer_Restart::class,
-		\App\Console\Commands\Kosan\Mosquitto_Restart::class,
-		\App\Console\Commands\Kosan\Mosquitto_AddUser::class,
+		\App\Console\Commands\Mosquitto\Restart::class,
+		\App\Console\Commands\Mosquitto\Reload::class,
+		\App\Console\Commands\Mosquitto\AddUser::class,
 		
+		\App\Console\Commands\Kosan\KosanServer_Restart::class,
 		\App\Console\Commands\Kosan\UpdateRegionTable::class,
     ];
 

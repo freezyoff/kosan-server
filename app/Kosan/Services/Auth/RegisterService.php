@@ -3,6 +3,7 @@ namespace App\Kosan\Services\Auth;
 
 use Illuminate\Support\Facades\Validator;
 use Str;
+use Artisan;
 
 use App\Kosan\Service\EmailValidationService;
 use App\Kosan\Models\User;
@@ -19,6 +20,7 @@ class RegisterService{
 		}
 		
 		$user->save();
+		$user->renewApiToken();
 		
 		//send email notification
 		$user->notify(
@@ -32,32 +34,15 @@ class RegisterService{
 			])
 		);
 		
-		//@TODO: need a way to implement MQTT Client username & password
 		//add mosquitto user and password to passwd file
 		//so the user can use mqtt
-		/*
-		exec(
-			Str::replaceArray(
-				'?', 
-				[config("kosan.mqtt_password_file"), $user->email, $cred['password']], 
-				config("kosan.linux_shell.add_moquitto_user")
-			) 
-			. " && " .
-			Str::replaceArray(
-				'?', 
-				[env('DB_PASSWORD', "")], 
-				config("kosan.linux_shell.restart_moquitto")
-			)
-			. " && " .
-			Str::replaceArray(
-				'?', 
-				[env('DB_PASSWORD', "")], 
-				config("kosan.linux_shell.restart_kosan_server")
-			)
-		);
-		*/
+		Artisan::call('mosquitto:adduser', [
+			'user' 	  => md5($user->email),
+			'pwd' 	  => $user->api_token
+		]);
 		
-		$user->renewApiToken();
+		//reload mosquitto server to take immidiate effect of password file change
+		Artisan::call('mosquitto:reload', []);
 		
 		return [
 			'api_token'=> 			$user->api_token,

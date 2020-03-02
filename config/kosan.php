@@ -7,4 +7,5 @@
 		"m"=>"laki - laki",
 		"f"=>"perempuan",
 	]
+	
 ];

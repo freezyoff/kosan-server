@@ -66,16 +66,13 @@ Route::prefix("oauth")
 			
 	});
 
-Route::get("/redirect", function(){
-	$target = request("url", false);
-	if (!$target){
-		$target = route('web.my.dashboard');
-	}
-	return view('service.redirector',[
-		"target"=> $target,
-		"message"=> request("message", false)
-	]);
-})->name('web.service.redirector');
+Route::prefix("redirect")
+	->middleware("auth")
+	->namespace("\App\Http\Controllers\Services\Web")
+	->group(function(){
+		Route::get("", "RedirectorController@redirect")
+			->name('web.service.redirector');
+	});
 
 Route::prefix("resource")
 	->group(function(){
