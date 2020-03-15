@@ -18,6 +18,10 @@ class Chipset extends Model
 		return $this->hasMany("App\Kosan\Models\ChipsetOS", "chipset_id", "id");
 	}
 	
+	public function latestChipsetOS(){
+		return $this->chipsetOS()->orderBy('id')->first();
+	}
+	
 	public function chipsetIO(){
 		return $this->hasMany("App\Kosan\Models\ChipsetIO", "chipset_id", "id");
 	}

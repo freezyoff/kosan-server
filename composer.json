@@ -14,7 +14,8 @@
         "laravel/tinker": "^1.0",
 		"google/apiclient": "^2.4",
 		"google/cloud-vision": "^0.24.0",
-		"facebook/graph-sdk": "^5.0"
+		"facebook/graph-sdk": "^5.0",
+		"doctrine/dbal": "*"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

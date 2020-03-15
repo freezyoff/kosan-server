@@ -13,6 +13,7 @@ class RoomFacility extends Model
 		"id", 
 		"room_id", 
 		"facility_id", 
+		"value", 
 		"type", 
 		"additional_cost"
 	];

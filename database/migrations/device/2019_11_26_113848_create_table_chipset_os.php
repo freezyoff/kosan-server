@@ -28,6 +28,7 @@ class CreateTableChipsetOs extends Migration
 			
 			$table->foreign('chipset_id')->references('id')->on('chipsets');
         });
+		
     }
 
     /**

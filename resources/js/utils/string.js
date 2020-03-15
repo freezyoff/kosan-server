@@ -15,3 +15,7 @@ window.ucwords = function(str, force){
 		}
 	);
 }
+
+window.numberSeparator = function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

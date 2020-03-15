@@ -25,9 +25,9 @@ class CreateTableRoomFacilities extends Migration
             $table->bigIncrements('id');
 			$table->unsignedBigInteger('room_id');
 			$table->unsignedBigInteger('facility_id');
-			$table->string("value");
-			$table->boolean("shared");
-			$table->boolean("additional");
+			$table->string('value');
+			$table->enum('type', ['S','A','I'])->comment("S: Shared, A: Additional, I: Include");
+			$table->double("additional_cost")->nullable()->comment("if column `type` value is 'A'");
 			
 			$table->foreign('room_id')->references('id')->on('kosan_kosan.rooms');
 			$table->foreign('facility_id')->references('id')->on('kosan_kosan.facilities');

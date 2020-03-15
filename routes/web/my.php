@@ -4,7 +4,8 @@
  */
 
 Route::get('', function(){
-	return redirect(route("web.my.dashboard"), 301);
+	//return redirect(route("web.my.dashboard"), 301);
+	return view('my.dashboard');
 });
 
 Route::prefix("dashboard")

@@ -9,6 +9,11 @@ class AlterTableChipsetOsAddColumnFirmware extends Migration
 {
     protected $connection = "kosan_device";
 	
+	protected function getSchema(){
+		$this->connection = env("DB_DATABASE_KOSAN_DEVICE", $this->connection);
+		return Schema::connection($this->connection);
+	}
+	
     /**
      * Run the migrations.
      *

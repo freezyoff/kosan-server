@@ -29,9 +29,9 @@ Route::domain("my.$domain")
 	->middleware("auth")
 	->group( base_path("routes/web/my.php") );
 
-Route::domain("owned.$domain")
+Route::domain("owner.$domain")
 	->middleware("auth")
-	->group( base_path("routes/web/owned.php") );
+	->group( base_path("routes/web/owner.php") );
 	
 Route::prefix("test")
 	->group(function(){

@@ -72,8 +72,8 @@ class CreateTableInvoices extends Migration
      */
     public function down()
     {
-		$this->getSchema()->dropIfExists('invoices');
 		$this->getSchema()->dropIfExists('devices_invoices');
 		$this->getSchema()->dropIfExists('rooms_invoices');
+		$this->getSchema()->dropIfExists('invoices');
     }
 }

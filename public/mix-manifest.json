@@ -1,7 +1,10 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/js/dashboard.js": "/js/dashboard.js",
+    "/css/brand.css": "/css/brand.css",
+    "/css/circular-progressbar.css": "/css/circular-progressbar.css",
+    "/vendor/material-dashboard/css/material-dashboard.min.css": "/vendor/material-dashboard/css/material-dashboard.min.css",
+    "/js/kosan/server-message-listener.js": "/js/kosan/server-message-listener.js",
     "/js/region-service.js": "/js/region-service.js",
     "/js/service-auth.js": "/js/service-auth.js"
 }

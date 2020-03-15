@@ -24,7 +24,7 @@ class CreateTableChipsets extends Migration
             $table->timestamps();
             $table->bigIncrements('id');
 			$table->string("name", 100)->default("");
-			$table->unsignedSmallInteger("used_io")->default(0);
+			$table->unsignedTinyInteger("used_io")->default(0);
         });
     }
 

@@ -15,6 +15,10 @@ class ChipsetOS extends Model
 		"firmware"
 	];
 	
+	public function size(){
+		return strlen($this->firmware);
+	}
+	
 	public function chipset(){
 		return $this->belongsTo("App\Kosan\Models\Chipset", "chipset_id", "id");
 	}

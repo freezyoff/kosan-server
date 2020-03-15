@@ -19,6 +19,17 @@ class User extends BaseModel
 		"email",
 		"email_verified_at",
 		"password",
+		"gender",
+		"address_province",
+		"address_regency",
+		"address_district",
+		"address_village",
+		"address_address",
+		"address_postcode",
+		"address_region",
+		"address_number",
+		"picture_profile",
+		"picture_idcard",
 		"remember_token",
 		"api_token",
 		"api_token_expired",
@@ -44,39 +55,6 @@ class User extends BaseModel
 	
 	public function getOauthGoogleToken(){
 		return Crypt::decryptString( $this->attributes['oauth_google_token'] );
-	}
-	
-	public function roomSubscriptions(){
-		return $this->belongsToMany(
-			"App\Kosan\Models\Room",  
-			"room_users",
-			"user_id", 
-			"room_id"
-		)->using("App\Kosan\Models\Relations\RoomUser");
-	}
-	
-	public function hasRoomSubscriptions(){
-		return $this->roomSubscriptions()->count() > 0;
-	}
-	
-	public function ownedLocations(){
-		return $this->hasMany("App\Kosan\Models\Location", "owner_user_id", "id");
-	}
-	
-	public function hasOwnedLoations(){
-		return $this->ownedLocations()->count() > 0;
-	}
-	
-	public function managedLocations(){
-		return $this->hasMany("App\Kosan\Models\Location", "pic_user_id", "id");
-	}
-	
-	public function issuedInvoice(){
-		return $this->hasMany("App\Kosan\Models\Invoice", "issuer_user_id", "id");
-	}
-	
-	public function billedInvoice(){
-		return $this->hasMany("App\Kosan\Models\Invoice", "billed_to_user_id", "id");
 	}
 	
 	public function renewApiToken(){
@@ -113,4 +91,42 @@ class User extends BaseModel
 	public static function findByActivationToken($token){
 		return User::whereRaw("MD5(`email`) = ?",[$token])->first();
 	}
+	
+	//
+	//location relations
+	//
+	public function hasOwnedLocations(){
+		return $this->locations()->count() > 0;
+	}
+	
+	public function locations(){
+		return $this->hasMany("App\Kosan\Models\Location", "owner_user_id", "id");
+	}
+	
+	//
+	//device relation
+	//
+	public function devices(){
+		return $this->hasMany("\App\Kosan\Models\Device", "owner_user_id", "id");
+	}
+	public function hasDevice(){
+		return $this->devices()->count() > 0;
+	}
+	
+	//
+	//room_users relation
+	//
+	public function roomSubscriptions(){
+		return $this->belongsToMany(
+			"App\Kosan\Models\Room",  
+			"room_users",
+			"user_id", 
+			"room_id"
+		)->using("App\Kosan\Models\Relations\RoomUser");
+	}
+	
+	public function hasRoomSubscriptions(){
+		return $this->roomSubscriptions()->count() > 0;
+	}
+	
 }

@@ -75,7 +75,7 @@ class AuthController extends Controller{
 		
 		//check if google account already registered as kosan user
 		if ( OAuthService::isRegisteredUser($token) ){
-			return redirect()->route("web.my.dashboard");
+			return redirect()->route("web.service.redirector");
 		}
 		
 		return redirect()->route("web.service.oauth.register", [
@@ -91,7 +91,7 @@ class AuthController extends Controller{
 		
 		//check if facebook account already registered as kosan user
 		if ( OAuthService::isRegisteredUser($token) ){
-			return redirect()->route("web.my.dashboard");
+			return redirect()->route("web.service.redirector");
 		}
 		
 		return redirect()->route("web.service.oauth.register", [

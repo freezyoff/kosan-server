@@ -13,12 +13,27 @@ const mix = require('laravel-mix');
 
 $_js = "";
 
+//
+//service
+//
 mix.js('resources/js/app.js', 'public/js')
-	.js('resources/js/dashboard.js', 'public/js')
-	
-	//service
 	.js('resources/js/service-auth.js', 'public/js')
-	.js('resources/js/region-service.js', 'public/js');
+	.js('resources/js/region-service.js', 'public/js')
+	.sass('resources/sass/app.scss', 'public/css/app.css')
+	.sass('resources/sass/brand.scss', 'public/css/brand.css')
+	.sass('resources/sass/circular-progressbar.scss', 'public/css/circular-progressbar.css')
 	
-
-mix.sass('resources/sass/app.scss', 'public/css/app.css');
+	.copy('resources/img', 'public/img')
+	 
+	//
+	// Material Dashboard
+	//
+	.copy('node_modules/material-dashboard/assets/js', 'public/vendor/material-dashboard/js')
+	.copy('node_modules/material-dashboard/assets/css', 'public/vendor/material-dashboard/css')
+	.copy('node_modules/material-dashboard/assets/img', 'public/vendor/material-dashboard/img')
+	.sass('resources/sass/material-dashboard.scss', 'public/vendor/material-dashboard/css/material-dashboard.min.css')
+	
+	//
+	// Kosan
+	//
+	.js('resources/js/kosan/server-message-listener.js', 'public/js/kosan/server-message-listener.js');

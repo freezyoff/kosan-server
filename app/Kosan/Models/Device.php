@@ -11,7 +11,7 @@ class Device extends Model
     protected $fillable = [
 		"id",
 		"chipset_id",
-		"location_id",
+		"owner_user_id",
 		"uuid",
 		"mac",
 		"api_token",
@@ -19,42 +19,11 @@ class Device extends Model
 	];
 	
 	public function chipset(){
-		return $this->belongsTo("App\Kosan\Models\Chipset", "chipset_id", "id");
+		return $this->belongsTo("\App\Kosan\Models\Chipset", "chipset_id", "id");
 	}
 	
-	public function rooms(){
-		return $this->belongsToMany(
-				"App\Kosan\Models\Room", 
-				"App\Kosan\Models\Relations\RoomAccessibility",
-				"device_id", "room_id"
-			)->withPivot([
-				"created_at",
-				"updated_at",
-				"id", 
-				"invoice_id", 
-				"room_id", 
-				"device_id", 
-				"valid_after", 
-				"valid_before", 
-				"grace_periode"
-			]);
+	public static function findByMacHash($macHash){
+		return Device::whereRaw("MD5(`mac`) = '$macHash'")->first();
 	}
 	
-	public function invoice(){
-		return $this->belongsToMany(
-				"App\Kosan\Models\Invoice", 
-				"App\Kosan\Models\Relations\RoomAccessibility",
-				"subscription_device_id", "invoice_id"
-			)->withPivot([
-				"created_at",
-				"updated_at",
-				"id", 
-				"invoice_id", 
-				"room_id", 
-				"device_id", 
-				"valid_after", 
-				"valid_before", 
-				"grace_periode"
-			]);
-	}
 }

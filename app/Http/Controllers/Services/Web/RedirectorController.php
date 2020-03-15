@@ -13,7 +13,7 @@ class RedirectorController extends Controller{
 			return $this->intended( request("url", false) );
 		}
 		
-		$hasOwnedLocations = Auth::user()->hasOwnedLoations();
+		$hasOwnedLocations = Auth::user()->hasOwnedLocations();
 		$hasRoomSubscriptions = Auth::user()->hasRoomSubscriptions();
 		
 		//check if user own a location and subscribe rooms
@@ -26,7 +26,7 @@ class RedirectorController extends Controller{
 		
 		//user own a location or more, show owner dashboard
 		if ($hasOwnedLocations){
-			return $this->intended($target? $target : route('web.owned.dashboard'));
+			return $this->intended($target? $target : route('web.owner.dashboard'));
 		}
 		
 		//user subcribe rooms, show room dashboard
