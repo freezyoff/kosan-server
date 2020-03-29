@@ -1,8 +1,4 @@
-if (window.oauth == null){
-	window.oauth = {};
-}
-
-window.oauth.google = {
+module.exports = {
 	options: [],
 	start: function(options){
 		gapi.load('auth2', function(){

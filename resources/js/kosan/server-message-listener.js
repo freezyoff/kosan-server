@@ -4,17 +4,15 @@ if (!window.Kosan) { window.Kosan = {} }
 
 require('../utils/datetime.js');
 require('../utils/string.js');
-require('./StateMessageFactory.js');
 
-Listener = {
-	listen: function(url, onConnectCallback, onMessageArriveCallback){
-		$.getJSON(url, function( data ) {
-			Kosan.ServerMessageListener._listen(data, onConnectCallback, onMessageArriveCallback);
-		});
-	},
-	
-	_listen: function(options, onConnectCallback, onMessageArriveCallback){
-		let client = MQTT.connect({
+let ServerMQTTClient = null;
+const Shell = require("./shell/Shell.js"),
+	ShellOS 	= require("./shell/ShellOS.js"),
+	ShellNTP 	= require("./shell/ShellNTP.js"),
+	ShellWifiST = require("./shell/ShellWifiST.js"),
+	ShellWifiAP = require("./shell/ShellWifiAP.js"),
+	ServerListenerImpl = function(options, onMessageArriveCallback){
+		ServerMQTTClient = MQTT.connect({
 			port: options.port,
 			host: options.host,
 			username: options.username,
@@ -25,20 +23,44 @@ Listener = {
 			rejectUnauthorized: true
 		});
 		
-		if (onConnectCallback){
-			client.on("connect", ()=>{
-				onConnectCallback(client)
-			});
-		}
+		ServerMQTTClient.on('connect', ()=>{
+			if (options.subscribes){
+				options.subscribes.forEach( idx => {
+					ServerMQTTClient.subscribe(idx);
+				});
+			}
+		});
 		
 		if (onMessageArriveCallback){
-			client.on("message", (topic, message)=>{
-				onMessageArriveCallback(client, topic, message)
+			ServerMQTTClient.on("message", (topic, message)=>{
+				onMessageArriveCallback(ServerMQTTClient, topic, message);
 			});
 		}
-	}
+	};
+	
+if (!window.Kosan){
+	window.Kosan = {
+		Server: null,
+		ShellFactory: null
+	};
+}
+
+Kosan.ShellFactory = {
+	makeOS: 	function(str){ return ShellOS.fromStr(str); },
+	makeNTP: 	function(str){ return ShellNTP.fromStr(str); },
+	makeWifiST: function(str){ return ShellWifiST.fromStr(str); },
+	makeWifiAP: function(str){ return ShellWifiAP.fromStr(str); }
 };
 
-if (!window.Kosan.ServerMessageListener){
-	window.Kosan.ServerMessageListener = Listener
-}
+Kosan.Server = {
+	listen: function(url, onMessageArriveCallback){
+		$.getJSON(url, function( data ) {
+			ServerListenerImpl(data, onMessageArriveCallback);
+		});
+	},
+	send: function(topic, message){
+		console.log("topic\n",">>" +topic);
+		console.log("message\n",">>" +message);
+		ServerMQTTClient.publish(topic, message, 1);
+	}
+};

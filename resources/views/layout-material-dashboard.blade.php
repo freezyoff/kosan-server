@@ -68,7 +68,7 @@
 			<!-- End Navbar -->
 		
 			<!-- Begin Content -->
-			<div class="content">
+			<div class="content pt-0">
 				<div class="container-fluid">
 					@stack('content')
 					@yield('content')

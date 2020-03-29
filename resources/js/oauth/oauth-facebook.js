@@ -1,8 +1,4 @@
-if (window.oauth == null){
-	window.oauth = {};
-}
-
-window.oauth.facebook = {
+module.exports = {
 	options: [],
 	start: function(options){
 		FB.init({

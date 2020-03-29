@@ -7,80 +7,13 @@
 
 @push('script')
 <script src="{{mix('js/kosan/server-message-listener.js')}}"></script>
+<script src="{{mix('js/http/owner/devices.js')}}"></script>
 <script>
-let devices = [
-	@foreach($devices->get() as $device)
-		'{{md5($device->mac)}}'{{($loop->last?"":",")}}
-	@endforeach
-];
-let devices_touch_timer = {};
-let device_state_mode = {};
+@foreach($devices->get() as $device)
+	APP.add('{{md5($device->mac)}}');//{{$device->mac}}
+@endforeach
 
-let _onConnect = function(client){
-	@foreach($devices->get() as $device)
-	client.subscribe("kosan/user/{{md5(Auth::user()->email)}}/device/{{md5($device->mac)}}/state/+")
-	@endforeach
-};
-
-let _onMessageArrive = function(client, topic, message){
-	//topic: "kosan/user/<email-md5>/device/<mac-md5>/state/<os|io|config>"
-	topic = topic.split("/");
-	devices_touch_timer[topic[4]] = now();
-	if (topic[6] == 'os'){
-		let find = "~m=";
-		let sdx = message.indexOf("~m=") + find.length;
-		device_state_mode[topic[4]] = 0|message.toString().substring(sdx, sdx+1);
-	}
-};
-
-let updateLastConnected = function(idx, isConnected){
-	let timestamp = devices_touch_timer[devices[idx]];
-	let span = $("<span></span>").addClass('badge ' + (isConnected? 'badge-success' : "badge-secondary"));
-	let div = $('#'+devices[idx]+'-con-last').empty();
-	
-	let t = Time.elapsed(timestamp);
-	if (t.diff <=3) {
-		div.append( span.html("baru saja") );
-	}
-	else if (!isConnected){
-		div.append( span.html("tidak terkoneksi") );
-	}
-	else{		
-		let str= "";
-		if (t.days) 	str	 = t.days + " hari ";
-		if (t.hours) 	str += t.hours + " jam ";
-		if (t.minutes) 	str += t.minutes + " menit ";
-		if (t.seconds) 	str += t.seconds + " detik ";
-		div.append( span.html(str + " yang lalu") );
-	}
-	
-}
-
-let updateStateMode = function(idx, isConnected){
-	let mode = ["tidak diketahui", "melayani", "melayani & download update"];
-	let modeIdx = isConnected? device_state_mode[devices[idx]] : 0;
-	$('#'+devices[idx]+'-con-mode').empty().append(
-		$("<span></span>").html(mode[modeIdx])
-			.addClass('badge ' + (isConnected? 'badge-success' : 'badge-secondary'))
-	);
-}
-
-$(document).ready(function(){
-	Kosan.ServerMessageListener.listen("{{route('web.owner.devices.listener')}}", _onConnect, _onMessageArrive);
-	setInterval(function(){ 
-		for (let i=0; i<devices.length; i++){
-			let cdevice = devices[i];
-			let isConnected = now() - devices_touch_timer[cdevice] < 3;
-			$('#'+devices[i]+'-icon').html( isConnected? 'router' : 'sync_problem')
-				.parents('div')
-				.removeClass( isConnected? 'card-header-secondary' : 'card-header-success')
-				.addClass( isConnected? 'card-header-success' : 'card-header-secondary');
-			
-			updateLastConnected(i, isConnected);
-			updateStateMode(i, isConnected);
-		}
-	}, 3000);
-});
+	APP.init("{{route('web.owner.devices.listener')}}");
 </script>
 @endpush
 

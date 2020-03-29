@@ -37,8 +37,8 @@ class RegisterService{
 		//add mosquitto user and password to passwd file
 		//so the user can use mqtt
 		Artisan::call('mosquitto:adduser', [
-			'user' 	  => md5($user->email),
-			'pwd' 	  => $user->api_token
+			'user' 	  => md5(strtolower($user->email)),
+			'pwd' 	  => md5($user->created_at)
 		]);
 		
 		//reload mosquitto server to take immidiate effect of password file change

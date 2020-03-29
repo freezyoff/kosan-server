@@ -3,10 +3,12 @@ if (!window.now){
 }
 
 if (!window.Time){
-	
+
 window.Time = {
+	// javascript-obfuscator:disable
 	now: function(){ return Math.round((new Date()).getTime() / 1000); },
 	
+	// javascript-obfuscator:disable
 	toHuman: function(timestamp){
 		var a = new Date(timestamp * 1000);
 		var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -21,6 +23,7 @@ window.Time = {
 		return time;
 	},
 	
+	// javascript-obfuscator:disable
 	elapsed: function(timestamp){
 		// record start time
 		let startTime = timestamp;

@@ -13,11 +13,11 @@ class DashboardController extends Controller{
 	
 	public function landing(){
 		$user = Auth::user();
-		return view("my.dashboard",[
-			"page"=>false,
-			"ownedLocationCount"=> $user->ownedLocations()->count(),
-			"managedLocationCount"=> $user->managedLocations()->count(),
-			"subscribedLocationCount"=>0
+		return view("my.material-dashboard.dashboard",[
+			//"page"=>false,
+			//"ownedLocationCount"=> $user->ownedLocations()->count(),
+			//"managedLocationCount"=> $user->managedLocations()->count(),
+			//"subscribedLocationCount"=>0
 		]);
 	}
 	

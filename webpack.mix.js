@@ -1,5 +1,44 @@
 const mix = require('laravel-mix');
 
+if (mix.inProduction()) {
+	const JavaScriptObfuscator = require('webpack-obfuscator');
+	mix.webpackConfig({
+		plugins: [
+			new JavaScriptObfuscator ({
+				//deadCodeInjection: true,
+				//deadCodeInjectionThreshold: 0.4,
+				//debugProtectionInterval: false,
+				//disableConsoleOutput: true,
+				//identifierNamesGenerator: 'hexadecimal',
+				//renameGlobals: false,
+				//rotateStringArray: true,
+				//shuffleStringArray: true,
+				//splitStrings: true,
+				//splitStringsChunkLength: 10,
+				//stringArray: true,
+				//stringArrayEncoding: 'base64',
+				//stringArrayThreshold: 0.75,
+				//unicodeEscapeSequence: false,
+				debugProtection: true,
+				compact: true,
+				controlFlowFlattening: true,
+				controlFlowFlatteningThreshold: 0.75,
+				selfDefending: true,
+				transformObjectKeys: true,
+				log: false,
+				rotateUnicodeArray: true
+			}, [
+				//exclude obfuscator
+			]
+			)
+		]
+	});
+}
+
+/*
+
+*/
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -11,29 +50,35 @@ const mix = require('laravel-mix');
  |
  */
 
-$_js = "";
+mix.sass('resources/sass/app.scss', 'public/css/app.css')
+	.sass('resources/sass/brand.scss', 'public/css/brand.css')
+	.sass('resources/sass/circular-progressbar.scss', 'public/css/circular-progressbar.css')
+	.copy('resources/img', 'public/img');
+	
+//
+// Material Dashboard
+//
+mix.copy('node_modules/material-dashboard/assets/js', 'public/vendor/material-dashboard/js')
+	.copy('node_modules/material-dashboard/assets/css', 'public/vendor/material-dashboard/css')
+	.copy('node_modules/material-dashboard/assets/img', 'public/vendor/material-dashboard/img')
+	.sass('resources/sass/material-dashboard.scss', 'public/vendor/material-dashboard/css/material-dashboard.min.css');
 
 //
-//service
+// Kosan
+//
+mix.js('resources/js/kosan/server-message-listener.js', 'public/js/kosan/server-message-listener.js');
+
+//
+//domain: service
 //
 mix.js('resources/js/app.js', 'public/js')
 	.js('resources/js/service-auth.js', 'public/js')
-	.js('resources/js/region-service.js', 'public/js')
-	.sass('resources/sass/app.scss', 'public/css/app.css')
-	.sass('resources/sass/brand.scss', 'public/css/brand.css')
-	.sass('resources/sass/circular-progressbar.scss', 'public/css/circular-progressbar.css')
+	.js('resources/js/region-service.js', 'public/js');
 	
-	.copy('resources/img', 'public/img')
-	 
-	//
-	// Material Dashboard
-	//
-	.copy('node_modules/material-dashboard/assets/js', 'public/vendor/material-dashboard/js')
-	.copy('node_modules/material-dashboard/assets/css', 'public/vendor/material-dashboard/css')
-	.copy('node_modules/material-dashboard/assets/img', 'public/vendor/material-dashboard/img')
-	.sass('resources/sass/material-dashboard.scss', 'public/vendor/material-dashboard/css/material-dashboard.min.css')
-	
-	//
-	// Kosan
-	//
-	.js('resources/js/kosan/server-message-listener.js', 'public/js/kosan/server-message-listener.js');
+//
+//domain: Owner
+//
+mix.js('resources/js/http/owner/device-statistics.js', 'public/js/http/owner/device-statistics.js')
+   .js('resources/js/http/owner/devices.js', 'public/js/http/owner/devices.js');
+
+mix.version();

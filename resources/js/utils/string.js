@@ -16,6 +16,7 @@ window.ucwords = function(str, force){
 	);
 }
 
-window.numberSeparator = function numberWithCommas(x) {
+window.numberSeparator = function(x) {
+	if (!x) return x;
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

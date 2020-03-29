@@ -51,5 +51,7 @@ class AddUser extends Command
 		if (!$process->isSuccessful()) {
 		    throw new ProcessFailedException($process);
 		}
+		
+		$this->call('mosquitto:reload', []);
     }
 }

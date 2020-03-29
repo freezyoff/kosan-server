@@ -1,10 +1,12 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/css/brand.css": "/css/brand.css",
-    "/css/circular-progressbar.css": "/css/circular-progressbar.css",
-    "/vendor/material-dashboard/css/material-dashboard.min.css": "/vendor/material-dashboard/css/material-dashboard.min.css",
-    "/js/kosan/server-message-listener.js": "/js/kosan/server-message-listener.js",
-    "/js/region-service.js": "/js/region-service.js",
-    "/js/service-auth.js": "/js/service-auth.js"
+    "/js/app.js": "/js/app.js?id=e4d1becaf7295c4c65c6",
+    "/js/http/owner/device-statistics.js": "/js/http/owner/device-statistics.js?id=98c6c415b8089e77bd1a",
+    "/js/http/owner/devices.js": "/js/http/owner/devices.js?id=8cd10bbccefb407152fe",
+    "/js/kosan/server-message-listener.js": "/js/kosan/server-message-listener.js?id=e430adcd5f814ae8f575",
+    "/css/app.css": "/css/app.css?id=093c1aef317944ef0581",
+    "/css/brand.css": "/css/brand.css?id=fd1f8aa54b02388cf61b",
+    "/css/circular-progressbar.css": "/css/circular-progressbar.css?id=59760047ffcad37ac722",
+    "/vendor/material-dashboard/css/material-dashboard.min.css": "/vendor/material-dashboard/css/material-dashboard.min.css?id=397a5e95df7dd5c2525a",
+    "/js/region-service.js": "/js/region-service.js?id=a9808f64059222a45198",
+    "/js/service-auth.js": "/js/service-auth.js?id=8fd16fc33def7ddfbfe0"
 }

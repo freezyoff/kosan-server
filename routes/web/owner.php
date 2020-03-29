@@ -26,9 +26,14 @@ Route::prefix("rooms")
 Route::namespace("\App\Http\Controllers\Owner\Web")
 	->group(function(){
 		
-		Route::get("devices", "DevicesController@landing")->name("web.owner.devices");
-		Route::get("devices/listener", "DevicesController@landingListener")->name("web.owner.devices.listener");
+		Route::get("devices", "DevicesController@landing")
+			->name("web.owner.devices");
+			
+		Route::get("device/statistics/{macHash}", "DevicesController@device")
+			->name("web.owner.device");
+		Route::post("device/statistics/{macHash}", "DevicesController@devicePost")
+			->name("web.owner.device");
 		
-		Route::get("device/mac/{macHash}", "DevicesController@device")->name("web.owner.device");
-		
+		Route::get("devices/listener/{targetDeviceMacHash?}", "DevicesController@getDeviceListener")
+			->name("web.owner.devices.listener");
 	});	

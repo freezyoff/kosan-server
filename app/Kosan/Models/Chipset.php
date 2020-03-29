@@ -19,7 +19,7 @@ class Chipset extends Model
 	}
 	
 	public function latestChipsetOS(){
-		return $this->chipsetOS()->orderBy('id')->first();
+		return $this->chipsetOS()->orderBy('id', 'desc')->first();
 	}
 	
 	public function chipsetIO(){
