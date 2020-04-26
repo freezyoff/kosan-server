@@ -1,0 +1,1 @@
+<a class="navbar-brand" href="{{$href}}">{{$label}}</a>

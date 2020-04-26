@@ -16,6 +16,10 @@ const ShellFactory = Kosan.ShellFactory,
 			
 			if 		(topic[6] == 'os')this.updateStateOS(message.toString());
 			else if (topic[6] == 'config') this.updateStateConfig(message.toString());
+			else if (topic[6] == 'io') {
+				let pp = message.toString().split("\n");
+				console.log(pp);
+			}
 		},
 		updateStateOS: function(msgStr){
 			const shellOS = ShellFactory.makeOS(msgStr);

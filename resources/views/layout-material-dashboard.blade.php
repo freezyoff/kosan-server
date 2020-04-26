@@ -47,10 +47,16 @@
 			<!-- Navbar -->
 			<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
 				<div class="container-fluid">
-					<div class="navbar-wrapper">
-						@stack('navbar-brand')
-						@yield('navbar-brand')
+					<div class="navbar-wrapper" style="flex-grow:1">
+						<a href="{{url("")}}" class="navbar-brand brand d-lg-none" style="font-size:1.7rem">
+							Kos<span class="unique cursor-pointer">a</span>n
+						</a>
+						<div class="d-none d-lg-block">
+							@yield('navbar-bread')
+							@stack('navbar-bread')
+						</div>
 					</div>
+					
 					<button class="navbar-toggler" 
 						type="button" 
 						data-toggle="collapse" 
@@ -62,7 +68,8 @@
 						<span class="navbar-toggler-icon icon-bar"></span>
 						<span class="navbar-toggler-icon icon-bar"></span>
 					</button>
-					<div class="collapse navbar-collapse justify-content-end"></div>
+					<div class="collapse navbar-collapse justify-content-end">
+					</div>
 				</div>
 			</nav>
 			<!-- End Navbar -->
@@ -88,7 +95,12 @@
 			
 		</div>
 	</div>
-  
+	
+	<!-- Begin: modal -->
+	@yield('modal')
+	@stack('modal')
+	<!-- End: modal -->
+	
 	<!-- Begin: scripts -->
 	<script src="{{url('vendor/material-dashboard/js/core/jquery.min.js')}}"></script>
 	<script src="{{url('vendor/material-dashboard/js/core/popper.min.js')}}"></script>

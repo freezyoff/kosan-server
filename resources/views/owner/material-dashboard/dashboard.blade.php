@@ -1,17 +1,14 @@
+@php 
+	$pageTitle = ucwords($pageTitle?? config("kosan.sidebar.owner.left.0.label"));
+	$href = isset($href)? $href : "javascript:;";
+@endphp
+
 @extends('layout-material-dashboard')
 
-@push("navbar-brand")
-<a href="{{url("")}}" class="navbar-brand brand d-lg-none" style="font-size:1.7rem">
-	Kos<span class="unique cursor-pointer">a</span>n
-</a>
-<a class="navbar-brand d-none d-lg-block" href="{{url("")}}">
-	@isset($pageTitle)	
-		{{ucwords($pageTitle)}}
-	@else
-		Dashboard
-	@endisset
-</a>
-@endpush
+
+@prepend("navbar-bread")
+	@include('layout.material-dashboard.nav-breadcrumb', ['label'=> $pageTitle, 'href'=>$href])
+@endprepend
 
 @section("nav-item")
 	@include ("owner.material-dashboard.sidebar")

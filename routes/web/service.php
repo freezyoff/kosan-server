@@ -33,6 +33,11 @@ Route::prefix('auth')
 				
 			});
 		
+		Route::prefix("logout")
+			->group(function(){
+				Route::any("", "AuthController@logout")->name("web.service.auth.logout");
+			});
+		
 		Route::prefix("forgot")
 			->group(function(){
 				

@@ -67,6 +67,13 @@ class AuthController extends Controller{
 		return view('service.login');
 	}
 	
+	public function logout(Request $request){
+		Auth::logout();
+		$request->session()->flush();
+		$request->session()->regenerate();
+		return redirect()->route('web.service.auth.login');
+	}
+	
 	public function verifyGoogleAccount($googleToken){
 		$token = OAuthService::verifyGoogleToken($googleToken);
 		if (!$token){

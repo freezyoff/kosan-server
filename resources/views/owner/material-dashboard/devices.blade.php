@@ -1,16 +1,17 @@
 @php 
-	$activeIndex = 1;
-	$cardViewPath = "layout.material-dashboard.card-status";
+	$activeIndex = 2;
+	$pageTitle = config("kosan.sidebar.owner.left.$activeIndex.label");
+	$href = config("kosan.sidebar.owner.left.$activeIndex.href");
 @endphp
 
-@extends('owner.material-dashboard.dashboard', ['pageTitle'=>config("kosan.sidebar.owner.left.$activeIndex.label")])
+@extends('owner.material-dashboard.dashboard', ['pageTitle'=>$pageTitle, 'href'=>$href])
 
 @push('script')
 <script src="{{mix('js/kosan/server-message-listener.js')}}"></script>
 <script src="{{mix('js/http/owner/devices.js')}}"></script>
 <script>
 @foreach($devices->get() as $device)
-	APP.add('{{md5($device->mac)}}');//{{$device->mac}}
+	APP.add('{{md5($device->mac)}}');
 @endforeach
 
 	APP.init("{{route('web.owner.devices.listener')}}");

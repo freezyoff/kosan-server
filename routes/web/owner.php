@@ -22,6 +22,13 @@ Route::prefix("rooms")
 		Route::get("", "RoomsController@landing")->name("web.owner.room");
 		
 	});	
+
+Route::namespace("\App\Http\Controllers\Owner\Web")
+	->prefix("profile")
+	->group(function(){		
+		Route::get("", "ProfileController@landing")->name('web.owner.profile');
+		Route::post("change-pwd", "ProfileController@changePwd")->name('web.owner.change-pwd');
+	});
 	
 Route::namespace("\App\Http\Controllers\Owner\Web")
 	->group(function(){

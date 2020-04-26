@@ -12,8 +12,10 @@
 		'owner'=>[
 			'left'=>[
 				["label"=>"dashboard", 'icon'=>'dashboard', "href"=> app()->runningInConsole()? "" : url("")],
-				["label"=>"Perangkat Kosan", 'icon'=>'usb', "href"=> app()->runningInConsole()? "" : url("devices")],
-				["label"=>"Kamar Kost", 'icon'=>'usb', "href"=> app()->runningInConsole()? "" : url("rooms")],
+				["label"=>"profil", 'icon'=>'person', "href"=> app()->runningInConsole()? "" : "route:web.owner.profile"],
+				["label"=>"Perangkat Kosan", 'icon'=>'router', "href"=> app()->runningInConsole()? "" : url("devices")],
+				["label"=>"Kamar Kost", 'icon'=>'room', "href"=> app()->runningInConsole()? "" : url("rooms")],
+				["label"=>"Keluar", 'icon'=>'power_settings_new', "href"=> app()->runningInConsole()? "" : 'route:web.service.auth.logout'],
 			]
 		]
 	]

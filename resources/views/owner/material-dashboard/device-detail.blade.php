@@ -1,9 +1,14 @@
 @php 
-	$activeIndex = 1;
-	$cardViewPath = "layout.material-dashboard.card-status";
+	$activeIndex = 2;
+	$pageTitle = config("kosan.sidebar.owner.left.$activeIndex.label");
+	$href = config("kosan.sidebar.owner.left.$activeIndex.href");
 @endphp
 
-@extends('owner.material-dashboard.dashboard', ['pageTitle'=>config("kosan.sidebar.owner.left.$activeIndex.label") . " / " . $device->mac])
+@extends('owner.material-dashboard.dashboard', ['pageTitle'=>$pageTitle, 'href'=>$href])
+
+@push('navbar-bread')
+/@include('layout.material-dashboard.nav-breadcrumb', ['label'=> $device->alias?? $device->mac, 'href'=>url()->current()])
+@endpush
 
 @push('styles')
 <link rel="stylesheet" href="{{mix('css/circular-progressbar.css')}}" />
