@@ -9,6 +9,10 @@ use Str;
 use Storage;
 
 use App\Kosan\Models\Device;
+use App\Kosan\Models\Location;
+use App\Kosan\Models\Relations\AccessControl;
+
+use App\Kosan\Services\Kosan\DeviceService;
 
 
 class DevicesController extends Controller{
@@ -40,10 +44,19 @@ class DevicesController extends Controller{
 		]);
 	}
 	
-    public function landing(){
-		return view("owner.material-dashboard.devices", [
-			'devices' => Auth::user()->devices()
-		]);
+    public function landing(Request $request){
+		$viewData = [];
+		$viewData['devices'] = Auth::user()->devices();
+		
+		$locationFilter = $request->get("location");
+		if ($locationFilter){
+			$locationRecord = Location::findByHash($locationFilter);
+			$viewData['location'] = $locationRecord->name;
+			$viewData['devices']->where('location_id', $locationRecord->id);
+		}
+		
+		//render
+		return view("owner.material-dashboard.devices", $viewData);
 	}
 	
 	public function device($macHash){
@@ -65,5 +78,39 @@ class DevicesController extends Controller{
 		}
 		
 		return $type;
+	}
+	
+	public function accessControl($macHash){
+		$device = Device::findByMacHash($macHash);
+		
+		//check if device already have access controls. 
+		//if don't have yet, make it
+		if ($device->accessControls()->count() <= 0){
+			DeviceService::makeBlankAccessControl($device);
+		}
+		
+		return view("owner.material-dashboard.access-control",[
+			"device"=>$device,
+			"accessControls"=>$device->accessControls
+		]);
+	}
+	
+	public function accessControlChangeName(Request $request){
+		//try to find access-control
+		$accessCtrl = AccessControl::findByHash($request->input("accessCtrl"));
+		DeviceService::changeAccessControlName($accessCtrl, $request->input("name"));
+		return redirect()->route("web.owner.access-control", ["macHash"=>$request->input("device")]);
+	}
+	
+	public function accessControlChangeRoom(Request $request){
+		$accessCtrl = AccessControl::findByHash($request->input("accessCtrl"));
+		DeviceService::changeAccessControlRoom($accessCtrl, $request->input("room"));
+		return redirect()->route("web.owner.access-control", ["macHash"=>$request->input("device")]);
+	}
+	
+	public function accessControlCreateRoom(Request $request){
+		$accessCtrl = AccessControl::findByHash($request->input("accessCtrl"));
+		DeviceService::createAccessControlRoom($accessCtrl, $request->input("roomAttr"));
+		return redirect()->route("web.owner.access-control", ["macHash"=>$request->input("device")]);
 	}
 }

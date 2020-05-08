@@ -86,10 +86,10 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/js/http/owner/device-statistics.js":
-/*!******************************************************!*\
-  !*** ./resources/js/http/owner/device-statistics.js ***!
-  \******************************************************/
+/***/ "./resources/js/http/owner/device-info.js":
+/*!************************************************!*\
+  !*** ./resources/js/http/owner/device-info.js ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -402,13 +402,13 @@ Kosan.Owner = {
 /***/ }),
 
 /***/ 8:
-/*!************************************************************!*\
-  !*** multi ./resources/js/http/owner/device-statistics.js ***!
-  \************************************************************/
+/*!******************************************************!*\
+  !*** multi ./resources/js/http/owner/device-info.js ***!
+  \******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/admin/kosan/kosan-server-http/resources/js/http/owner/device-statistics.js */"./resources/js/http/owner/device-statistics.js");
+module.exports = __webpack_require__(/*! /home/admin/kosan/kosan-server-http/resources/js/http/owner/device-info.js */"./resources/js/http/owner/device-info.js");
 
 
 /***/ })

@@ -13,6 +13,7 @@ class ChipsetIO extends Model
 		"chipset_id",
 		"mode", 
 		"pin", 
+		"chanel",
 		"trigger_signal", 
 		"trigger_target_pin", 
 		"trigger_target_signal", 

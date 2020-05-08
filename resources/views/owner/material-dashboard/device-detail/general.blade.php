@@ -70,14 +70,29 @@
 			</div>
 		</div>
 		<div class="card-footer pt-0 pb-2">
-			<button id="restart" 
-				class="btn btn-warning"
-				type="button"
-				device="{{md5($device->mac)}}"
-				owner="{{md5(Auth::user()->email)}}">
-				<i class="material-icons">autorenew</i>&nbsp;
-				<span>Restart Perangkat</span>
-			</button>
+			<div class="row">
+				<div class="col">
+					@php
+						$accessControlURL = route('web.owner.access-control',["macHash"=>md5($device->mac)]);
+					@endphp
+					<button class="btn btn-warning d-block"
+						type="button"
+						onclick="document.location='{{$accessControlURL}}'">
+						<i class="material-icons">gamepad</i>&nbsp;
+						<span>Pengaturan Kontrol Akses</span>
+					</button>				
+				</div>
+				<div class="col">
+					<button id="restart" 
+						class="btn btn-danger d-block"
+						type="button"
+						device="{{md5($device->mac)}}"
+						owner="{{md5(Auth::user()->email)}}">
+						<i class="material-icons">autorenew</i>&nbsp;
+						<span>Restart Perangkat</span>
+					</button>				
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

@@ -104,6 +104,11 @@ window.APP = {
   add: function add(item) {
     this.devices.push(item);
   },
+  restart: function restart(owner, device) {
+    var cmd = "kosan/owner/<email-md5>/device/<mac-md5>/command";
+    var topic = cmd.replace("<email-md5>", owner).replace("<mac-md5>", device);
+    Kosan.Server.send(topic, "#restart");
+  },
   devices: [],
   devices_touch_timer: {},
   devices_state_mode: {}
@@ -127,7 +132,7 @@ var Loop = function () {
       isConnected = now() - this.devices_touch_timer[cdevice] < 3;
     }
 
-    $('#' + this.devices[i] + '-icon').html(isConnected ? 'router' : 'sync_problem').parents('div').removeClass(isConnected ? 'card-header-secondary' : 'card-header-success').addClass(isConnected ? 'card-header-success' : 'card-header-secondary');
+    $('#' + this.devices[i] + '-icon').html(isConnected ? 'router' : 'sync_problem').parent().parent().removeClass(isConnected ? 'card-header-secondary' : 'card-header-success').addClass(isConnected ? 'card-header-success' : 'card-header-secondary');
     UpdateLastConnected(i, isConnected);
     UpdateStateMode(i, isConnected);
   }

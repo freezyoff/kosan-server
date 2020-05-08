@@ -9,6 +9,12 @@ window.APP = {
 	add: function(item){
 		this.devices.push(item);
 	},
+	restart: function(owner, device){
+		let cmd = "kosan/owner/<email-md5>/device/<mac-md5>/command";
+		let topic = cmd.replace("<email-md5>", owner)
+						.replace("<mac-md5>", device);
+		Kosan.Server.send(topic, "#restart");
+	},
 	devices: [],
 	devices_touch_timer: {},
 	devices_state_mode: {}
@@ -35,7 +41,8 @@ const Loop = function(){
 		}
 		
 		$('#'+this.devices[i]+'-icon').html( isConnected? 'router' : 'sync_problem')
-			.parents('div')
+			.parent()
+			.parent()
 			.removeClass( isConnected? 'card-header-secondary' : 'card-header-success')
 			.addClass( isConnected? 'card-header-success' : 'card-header-secondary');
 		

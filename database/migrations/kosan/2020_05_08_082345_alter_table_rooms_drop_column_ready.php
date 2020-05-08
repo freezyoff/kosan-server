@@ -4,9 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableRooms extends Migration
+class AlterTableRoomsDropColumnReady extends Migration
 {
-	protected $connection = "kosan_kosan";
+    protected $connection = "kosan_kosan";
 	
 	public function getSchema(){
 		$this->connection = env("DB_DATABASE_KOSAN_KOSAN", $this->connection);
@@ -20,14 +20,8 @@ class CreateTableRooms extends Migration
      */
     public function up()
     {
-        $this->getSchema()->create('rooms', function (Blueprint $table) {
-            $table->timestamps();
-            $table->bigIncrements('id');
-			$table->unsignedBigInteger("location_id");
-			$table->string("name");
-			$table->double("rate_daily")->default(0);
-			$table->double("rate_weekly")->default(0);
-			$table->double("rate_monthly")->default(0);
+		$this->getSchema()->table('rooms', function (Blueprint $table) {
+			$table->dropColumn('ready');
         });
     }
 
@@ -38,6 +32,8 @@ class CreateTableRooms extends Migration
      */
     public function down()
     {
-        $this->getSchema()->dropIfExists('rooms');
+        $this->getSchema()->table('rooms', function (Blueprint $table) {
+			$table->boolean("ready")->default(false);
+        });
     }
 }

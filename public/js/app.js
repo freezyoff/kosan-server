@@ -18118,6 +18118,71 @@ input.password = {
       return value.length > 0 ? /^([0-9\-]){1,}$/.test(value) : true;
     });
   };
+
+  $.fn.inputFilterCurrency = function () {
+    var isValidCurrencyFormat = function isValidCurrencyFormat(value) {
+      return /^(?=.*\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|0)?(\.\d{1,})?$/g.test(value);
+    };
+
+    var hasNonCurrencyChars = function hasNonCurrencyChars(value) {
+      return /([^0-9.,])/g.test(value);
+    };
+
+    var formatCurrency = function formatCurrency(value) {
+      //if not reach 3 digit, do nothing
+      if (value.length <= 3) return value;
+      var t_decimal = "";
+      var t_float = ""; //check if has float number
+
+      if (/[.]/.test(value)) {
+        //split decimal and float number
+        var valueArray = value.split(".");
+        var _t_decimal = valueArray[0];
+        var _t_float = valueArray[1];
+      } else {
+        t_decimal = value;
+        t_float = false;
+      } //replace number separator from decimal
+
+
+      t_decimal = t_decimal.replace(/[,]/g, ""); //add decimal separator
+
+      var t_mask = "";
+
+      while (t_decimal.length > 3) {
+        var t_char = t_decimal.substring(t_decimal.length - 3, t_decimal.length);
+        t_mask = t_char + (t_mask ? "," + t_mask : "");
+        t_decimal = t_decimal.substring(0, t_decimal.length - 3);
+      } //combine float
+
+
+      return t_decimal + "," + t_mask + (t_float ? "." + t_float : "");
+    };
+
+    return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+      //check if has non currency characters
+      if (hasNonCurrencyChars(this.value)) {
+        if (this.hasOwnProperty("oldValue")) {
+          this.value = this.oldValue;
+          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+        } else {
+          this.value = "";
+        }
+      } //assume no non-currency characters exists.
+      //check its currency format
+      else if (!isValidCurrencyFormat(this.value)) {
+          var f_currency = formatCurrency(this.value);
+          this.oldSelectionStart = f_currency.length;
+          this.oldSelectionEnd = f_currency.length;
+          this.value = f_currency;
+        } //assume valid currency format
+        else {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          }
+    });
+  };
 })(jQuery);
 
 /***/ }),

@@ -21,22 +21,30 @@ class CreateTableInvoices extends Migration
         $this->getSchema()->create('invoices', function (Blueprint $table) {
             $table->timestamps();
             $table->bigIncrements('id');
-			$table->unsignedBigInteger('issuer_user_id')->comment("yang membuat invoice");
 			$table->unsignedBigInteger('biller_user_id')->comment("yang membayar invoice");
+			
+			//invoice date info
+			$table->timestamp('issue_date')
+				->nullable()
+				->default(null)
+				->comment("tanggal invoice dibuat");
+			$table->timestamp('due_date')
+				->nullable()
+				->default(null)
+				->comment("tanggal jatuh tempo invoice");
+			$table->unsignedInteger('grace_periode')
+				->nullable()
+				->default(null)
+				->comment("tenggat waktu invoice dalam satuan hari");
+			
+			//invoice ammount info
 			$table->double('ammount');
 			$table->double('tax');
 			$table->double('discount');
 			$table->string('description');
 			
-			$table->foreign('issuer_user_id')->references('id')->on('kosan_system.users');
 			$table->foreign('biller_user_id')->references('id')->on('kosan_system.users');
 			
-			//$table->unsignedBigInteger('subscription_device_id');
-			//$table->unsignedBigInteger('subscription_room_id');
-			//$table->timestamp('subscription_start')->nullable()->default(null);
-			//$table->timestamp('subscription_end')->nullable()->default(null);
-			//$table->foreign('subscription_device_id')->references('id')->on('kosan_device.devices');
-			//$table->foreign('subscription_room_id')->references('id')->on('kosan_kosan.rooms');
         });
 		
 		$this->getSchema()->create('devices_invoices', function (Blueprint $table) {

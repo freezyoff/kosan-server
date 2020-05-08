@@ -29,4 +29,8 @@ class Location extends Model
 	public function pic(){
 		return $this->belongsTo("App\Kosan\Models\User", "pic_user_id", "id");
 	}
+	
+	public static function findByHash($hash){
+		return self::whereRaw("MD5(`id`) = '$hash'")->first();
+	}
 }

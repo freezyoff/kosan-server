@@ -7,6 +7,7 @@
 @extends('owner.material-dashboard.dashboard', ['pageTitle'=>$pageTitle, 'href'=>$href])
 
 @push('navbar-bread')
+/@include('layout.material-dashboard.nav-breadcrumb', ['label'=> 'Informasi', 'href'=>url()->current()])
 /@include('layout.material-dashboard.nav-breadcrumb', ['label'=> $device->alias?? $device->mac, 'href'=>url()->current()])
 @endpush
 
@@ -38,7 +39,7 @@
 
 @push('script')
 <script src="{{mix('js/kosan/server-message-listener.js')}}"></script>
-<script src="{{mix('js/http/owner/device-statistics.js')}}"></script>
+<script src="{{mix('js/http/owner/device-info.js')}}"></script>
 <script>
 let Charts = {};
 let _lastRecievedMessage = 0;

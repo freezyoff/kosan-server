@@ -5,13 +5,11 @@ namespace App\Kosan\Services\Kosan;
 use Illuminate\Http\Request;
 use Auth;
 
-use App\Http\Controllers\Controller;
-
 use App\Kosan\Models\User;
 use App\Kosan\Models\Location;
 use App\Kosan\Models\Room;
 
-class LocationService extends Controller{
+class LocationService{
 	
 	public function make(User $user, array $locationData, int $rooms){
 		//make location
