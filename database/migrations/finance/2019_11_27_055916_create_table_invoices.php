@@ -38,10 +38,7 @@ class CreateTableInvoices extends Migration
 				->comment("tenggat waktu invoice dalam satuan hari");
 			
 			//invoice ammount info
-			$table->double('ammount');
-			$table->double('tax');
-			$table->double('discount');
-			$table->string('description');
+			$table->string('notes');
 			
 			$table->foreign('biller_user_id')->references('id')->on('kosan_system.users');
 			
@@ -52,8 +49,15 @@ class CreateTableInvoices extends Migration
             $table->bigIncrements('id');
 			$table->unsignedBigInteger("invoice_id");
 			$table->unsignedBigInteger("device_id");
-			$table->timestamp('subscription_start')->nullable()->default(null);
-			$table->timestamp('subscription_end')->nullable()->default(null);
+			$table->timestamp('start')->nullable()->default(null)->comment('subscription start');
+			$table->timestamp('end')->nullable()->default(null)->comment('subscription end');
+			$table->unsignedInteger('grace_periode')
+				->nullable()
+				->default(null)
+				->comment("tenggat waktu invoice dalam satuan hari");
+			$table->double('ammount');
+			$table->double('tax');
+			$table->double('discount');
 			
 			$table->foreign('invoice_id')->references('id')->on('kosan_finance.invoices');
 			$table->foreign('device_id')->references('id')->on('kosan_device.devices');
@@ -64,8 +68,15 @@ class CreateTableInvoices extends Migration
             $table->bigIncrements('id');
 			$table->unsignedBigInteger("invoice_id");
 			$table->unsignedBigInteger("room_id");
-			$table->timestamp('subscription_start')->nullable()->default(null);
-			$table->timestamp('subscription_end')->nullable()->default(null);
+			$table->timestamp('start')->nullable()->default(null)->comment('subscription start');
+			$table->timestamp('end')->nullable()->default(null)->comment('subscription end');
+			$table->unsignedInteger('grace_periode')
+				->nullable()
+				->default(null)
+				->comment("tenggat waktu invoice dalam satuan hari");
+			$table->double('ammount');
+			$table->double('tax');
+			$table->double('discount');
 			
 			$table->foreign('invoice_id')->references('id')->on('kosan_finance.invoices');
 			$table->foreign('room_id')->references('id')->on('kosan_kosan.rooms');
