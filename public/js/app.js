@@ -18119,6 +18119,73 @@ input.password = {
     });
   };
 
+  $.fn.inputFilterPhone = function () {
+    var hasNonPhoneChar = function hasNonPhoneChar(value) {
+      return /([^0-9-\s+])/g.test(value);
+    };
+
+    var isValidPhoneFormat = function isValidPhoneFormat(value) {
+      return /^(([0-9+\s-]{1,4})(\s|-)){0,}([0-9+\s-]{1,4})$/g.test(value);
+    };
+
+    var applyFormat = function applyFormat(value) {
+      //if not reach 4 digit, do nothing
+      if (value.length <= 4) return value; //we group each 4 digit including (+)
+
+      trimmed = value.trim().replace(/[\s-]/g, "");
+      formatted = "";
+
+      while (trimmed.length > 4) {
+        formatted += formatted.length > 0 ? " " : "";
+        formatted += trimmed.substring(0, 4);
+        trimmed = trimmed.substring(4, trimmed.length);
+      }
+
+      formatted += formatted.length > 0 ? " " : "";
+      formatted += trimmed;
+      return formatted;
+    };
+
+    return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+      //check if has non phone characters
+      if (hasNonPhoneChar(this.value)) {
+        if (this.hasOwnProperty("oldValue")) {
+          this.value = this.oldValue;
+          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+        } else {
+          this.value = "";
+        }
+      } //assume no non-phone characters exists.
+      //check its valid phone format
+      else if (!isValidPhoneFormat(this.value)) {
+          var f_currency = applyFormat(this.value);
+          this.oldSelectionStart = f_currency.length;
+          this.oldSelectionEnd = f_currency.length;
+          this.value = f_currency;
+        } //assume valid phone format
+        else {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          }
+    });
+  };
+
+  $.fn.inputFilterNumber = function () {
+    return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+      if (/^\d*$/.test(this.value)) {
+        this.oldValue = this.value;
+        this.oldSelectionStart = this.selectionStart;
+        this.oldSelectionEnd = this.selectionEnd;
+      } else if (this.hasOwnProperty("oldValue")) {
+        this.value = this.oldValue;
+        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+      } else {
+        this.value = "";
+      }
+    });
+  };
+
   $.fn.inputFilterCurrency = function () {
     var isValidCurrencyFormat = function isValidCurrencyFormat(value) {
       return /^(?=.*\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|0)?(\.\d{1,})?$/g.test(value);

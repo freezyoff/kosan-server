@@ -19,21 +19,9 @@ class User extends BaseModel
 		"email",
 		"email_verified_at",
 		"password",
-		"gender",
-		"address_province",
-		"address_regency",
-		"address_district",
-		"address_village",
-		"address_address",
-		"address_postcode",
-		"address_region",
-		"address_number",
-		"picture_profile",
-		"picture_idcard",
 		"remember_token",
 		"api_token",
 		"api_token_expired",
-		"oauth_google_token"
 	];
 	
 	public function setPasswordAttribute($value){
@@ -80,18 +68,6 @@ class User extends BaseModel
 		return $this->email_verified_at? true : false;
 	}
 	
-	public static function findByEmail($email){
-		return User::where('email',strtolower($email))->first();
-	}
-	
-	public static function findByApiToken($token){
-		return User::where('api_token',$token)->first();
-	}
-	
-	public static function findByActivationToken($token){
-		return User::whereRaw("MD5(`email`) = ?",[$token])->first();
-	}
-	
 	//
 	//location relations
 	//
@@ -125,8 +101,30 @@ class User extends BaseModel
 		)->using("App\Kosan\Models\Relations\RoomUser");
 	}
 	
+	//
+	//banks Relations
+	//
+	public function bankAccounts(){
+		return $this->hasMany('\App\Kosan\Models\BankAccount', "owner_user_id", "id");
+	}
+	
 	public function hasRoomSubscriptions(){
 		return $this->roomSubscriptions()->count() > 0;
 	}
 	
+	public static function findByEmail($email){
+		return User::where('email',strtolower($email))->first();
+	}
+	
+	public static function findByApiToken($token){
+		return User::where('api_token',$token)->first();
+	}
+	
+	public static function findByActivationToken($token){
+		return User::whereRaw("MD5(`email`) = ?",[$token])->first();
+	}
+	
+	public static function findByHash($hash){
+		return User::whereRaw("MD5(`id`) = ?",$hash)->first();
+	}
 }

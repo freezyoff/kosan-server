@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>Laravel</title>
+		<meta name="description" content="<strong>Solusi Sistem Manajemen Kost</strong>. Kosan mengadopsi teknologi IOT (Internet Of Things), menjadikan manajemen kost lebih accessible dan mudah dikontrol.">
+        <title>Kosan - Hardware dan Software manajemen kost</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">

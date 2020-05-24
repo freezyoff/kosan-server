@@ -12,12 +12,17 @@
 		'owner'=>[
 			'left'=>[
 				["label"=>"dashboard", 'icon'=>'dashboard', "href"=> app()->runningInConsole()? "" : url("")],
-				["label"=>"profil", 'icon'=>'person', "href"=> app()->runningInConsole()? "" : "route:web.owner.profile"],
+				["label"=>"profil", 'icon'=>'portrait', "href"=> app()->runningInConsole()? "" : "route:web.owner.profile"],
 				["label"=>"Perangkat Kosan", 'icon'=>'router', "href"=> app()->runningInConsole()? "" : url("devices")],
 				["label"=>"Kamar Kost", 'icon'=>'room', "href"=> app()->runningInConsole()? "" : url("rooms")],
 				["label"=>"Keluar", 'icon'=>'power_settings_new', "href"=> app()->runningInConsole()? "" : 'route:web.service.auth.logout'],
 			]
 		]
+	],
+	
+	'invoice'=>[
+		'grace_periode'=>60*60*24*7,	//30 days,
+		''
 	]
 	
 ];

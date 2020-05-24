@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -94,6 +94,8 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ../../utils/numberOnly.js */ "./resources/js/utils/numberOnly.js");
+
+__webpack_require__(/*! ../../utils/formValidation.js */ "./resources/js/utils/formValidation.js");
 
 if (!window.APP) {
   window.APP = {};
@@ -128,6 +130,139 @@ $(document).ready(function () {
 
 /***/ }),
 
+/***/ "./resources/js/utils/formValidation.js":
+/*!**********************************************!*\
+  !*** ./resources/js/utils/formValidation.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+(function ($) {
+  var ATTR_VALIDATE_TYPE = "validate";
+  var ATTR_VALIDATE_TYPE_SEPARATOR = "|";
+  var ATTR_VALIDATE_TOGGLE = "validate-toggle";
+  var ATTR_VALIDATE_ERROR = "validate-error";
+  var validationFunctions = {
+    email: function email(value) {
+      return /^(.*)@(.*)\.(.*)$/.test(value);
+    },
+    phone: function phone(value) {
+      return /^(([0-9+\s-]{1,4})(\s|-)){0,}([0-9+\s-]{1,4})$/g.test(value);
+    },
+    min: function min(digit, value) {
+      return value >= parseInt(digit);
+    },
+    max: function max(digit, value) {
+      return value <= parseInt(digit);
+    },
+    file: function file(value) {
+      //we only validate empty or not
+      return value.length > 0;
+    },
+    alphabet: function alphabet(value) {
+      return /^[[:alpha:]\s]*$/g.test(value);
+    },
+    "in": function _in(src, value) {
+      return value.length > 0 ? src.indexOf(value) > -1 : false;
+    }
+  };
+
+  var validationHandler = function validationHandler(element) {
+    var t_validation = $(element).attr(ATTR_VALIDATE_TYPE).split(ATTR_VALIDATE_TYPE_SEPARATOR);
+    var validationResult = true;
+
+    for (var i = 0; i < t_validation.length; i++) {
+      if (t_validation[i].toLowerCase() == "email") {
+        validationResult &= validationFunctions.email($(element).val());
+      } else if (t_validation[i].toLowerCase() == "phone") {
+        validationResult &= validationFunctions.phone($(element).val());
+      } else if (t_validation[i].toLowerCase().includes("min:")) {
+        var props = t_validation[i].split(":");
+        validationResult &= validationFunctions.min(props[1], $(element).val().length);
+      } else if (t_validation[i].toLowerCase().includes("max:")) {
+        var _props = t_validation[i].split(":"); //check if we should check file size for <input type="file" />
+
+
+        if ($(element).attr('type').toLowerCase() == "file") {
+          //check if file provided
+          if (element.files[0]) {
+            validationResult &= validationFunctions.max(_props[1], element.files[0].size);
+          } else {
+            validationResult &= false;
+          }
+        } else {
+          validationResult &= validationFunctions.max(_props[1], $(element).val().length);
+        }
+      } else if (t_validation[i].toLowerCase().includes("file")) {
+        validationResult &= validationFunctions.file($(element).val());
+      } else if (t_validation[i].toLowerCase().includes("alphabet")) {
+        validationResult &= validationFunctions.file($(element).val());
+      } else if (t_validation[i].toLowerCase().includes("in:")) {
+        try {
+          var _props2 = t_validation[i].split(":");
+
+          validationResult &= validationFunctions["in"](_props2[1], $(element).val());
+        } catch (e) {
+          validationResult &= false;
+        }
+      }
+    }
+
+    return validationResult;
+  };
+
+  $.fn.requireValidation = function (callbacks) {
+    var frm = $(this);
+    frm.submit(function () {
+      //call before validation
+      if (callbacks.beforeValidation) {
+        callbacks.beforeValidation(frm);
+      }
+
+      var valid = true;
+      var inputFields = $(this).find("[" + ATTR_VALIDATE_TYPE + "]");
+      var focusTarget = false;
+
+      for (var i = 0; i < inputFields.length; i++) {
+        if ($(inputFields[i]).attr(ATTR_VALIDATE_TYPE)) {
+          var hasErrorMsg = $(inputFields[i]).attr(ATTR_VALIDATE_ERROR);
+          var isValid = validationHandler(inputFields[i]);
+
+          if (!isValid) {
+            $(inputFields[i]).addClass("invalid");
+            $(hasErrorMsg).removeClass('d-none');
+
+            if (callbacks.onInvalidFoundCallback) {
+              callbacks.onInvalidFoundCallback(inputFields[i]);
+            }
+          } else {
+            $(inputFields[i]).removeClass("invalid");
+            $(hasErrorMsg).addClass('d-none');
+
+            if (callbacks.onValidFoundCallback) {
+              callbacks.onValidFoundCallback(inputFields[i]);
+            }
+          }
+
+          valid &= isValid;
+
+          if (callbacks.onValidateResult) {
+            callbacks.onValidateResult(valid);
+          }
+        }
+      }
+
+      if (valid) {
+        return true;
+      }
+
+      return false;
+    });
+  };
+})(jQuery);
+
+/***/ }),
+
 /***/ "./resources/js/utils/numberOnly.js":
 /*!******************************************!*\
   !*** ./resources/js/utils/numberOnly.js ***!
@@ -155,6 +290,73 @@ $(document).ready(function () {
     return this.inputFilter(function (value) {
       if (/\-{2,}/.test(value)) return false;
       return value.length > 0 ? /^([0-9\-]){1,}$/.test(value) : true;
+    });
+  };
+
+  $.fn.inputFilterPhone = function () {
+    var hasNonPhoneChar = function hasNonPhoneChar(value) {
+      return /([^0-9-\s+])/g.test(value);
+    };
+
+    var isValidPhoneFormat = function isValidPhoneFormat(value) {
+      return /^(([0-9+\s-]{1,4})(\s|-)){0,}([0-9+\s-]{1,4})$/g.test(value);
+    };
+
+    var applyFormat = function applyFormat(value) {
+      //if not reach 4 digit, do nothing
+      if (value.length <= 4) return value; //we group each 4 digit including (+)
+
+      trimmed = value.trim().replace(/[\s-]/g, "");
+      formatted = "";
+
+      while (trimmed.length > 4) {
+        formatted += formatted.length > 0 ? " " : "";
+        formatted += trimmed.substring(0, 4);
+        trimmed = trimmed.substring(4, trimmed.length);
+      }
+
+      formatted += formatted.length > 0 ? " " : "";
+      formatted += trimmed;
+      return formatted;
+    };
+
+    return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+      //check if has non phone characters
+      if (hasNonPhoneChar(this.value)) {
+        if (this.hasOwnProperty("oldValue")) {
+          this.value = this.oldValue;
+          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+        } else {
+          this.value = "";
+        }
+      } //assume no non-phone characters exists.
+      //check its valid phone format
+      else if (!isValidPhoneFormat(this.value)) {
+          var f_currency = applyFormat(this.value);
+          this.oldSelectionStart = f_currency.length;
+          this.oldSelectionEnd = f_currency.length;
+          this.value = f_currency;
+        } //assume valid phone format
+        else {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          }
+    });
+  };
+
+  $.fn.inputFilterNumber = function () {
+    return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+      if (/^\d*$/.test(this.value)) {
+        this.oldValue = this.value;
+        this.oldSelectionStart = this.selectionStart;
+        this.oldSelectionEnd = this.selectionEnd;
+      } else if (this.hasOwnProperty("oldValue")) {
+        this.value = this.oldValue;
+        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+      } else {
+        this.value = "";
+      }
     });
   };
 
@@ -226,7 +428,7 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ 11:
+/***/ 12:
 /*!************************************************!*\
   !*** multi ./resources/js/http/owner/rooms.js ***!
   \************************************************/

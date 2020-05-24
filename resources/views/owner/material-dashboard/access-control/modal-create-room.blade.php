@@ -10,17 +10,18 @@
 ?>
 
 <!-- begin: owner/material-dashboard/access-control/modal-create-room -->
-<form id="{{$formID}}" action="{{route('web.owner.access-control.create.room')}}" method="post">
-@csrf
-<input name="device" type="hidden" value="{{md5($device->mac)}}" />
-<input name="accessCtrl" type="hidden" value="{{md5($accessCtrl->id)}}" />
-
-@if ($deviceLocationSet)
-	<input name="location" type="hidden" value="{{md5($device->location->id)}}" />
-@endif
 
 <div class="modal fade" id="{{$modalID}}" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-dialog modal-dialog-centered" role="document">
+	<form id="{{$formID}}" action="{{route('web.owner.access-control.create.room')}}" method="post">
+		@csrf
+		<input name="device" type="hidden" value="{{md5($device->mac)}}" />
+		<input name="accessCtrl" type="hidden" value="{{md5($accessCtrl->id)}}" />
+
+		@if ($deviceLocationSet)
+			<input name="location" type="hidden" value="{{md5($device->location->id)}}" />
+		@endif
+		
 		<div class="modal-content">
 			<div class="modal-header border-0 pt-0 pl-4 pr-4 pt-4 pb-0">
 				<h5 class="modal-title">
@@ -68,9 +69,9 @@
 				<button id="{{$saveBtnID}}" type="submit" class="btn btn-primary" disabled="disabled">Simpan</button>
 			</div>
 		</div>
-	</div>
+	</form>
 </div>
-</form>
+</div>
 
 @push('script')
 <script>

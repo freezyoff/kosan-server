@@ -78,9 +78,10 @@ mix.js('resources/js/app.js', 'public/js')
 //
 //domain: Owner
 //
-mix.js('resources/js/http/owner/device-info.js', 'public/js/http/owner/device-info.js')
-   .js('resources/js/http/owner/devices.js', 'public/js/http/owner/devices.js')
+mix.js('resources/js/http/owner/profile.js', 			'public/js/http/owner/profile.js')
+	.js('resources/js/http/owner/device-info.js', 	'public/js/http/owner/device-info.js')
+   .js('resources/js/http/owner/devices.js', 		'public/js/http/owner/devices.js')
    .js('resources/js/http/owner/access-control.js', 'public/js/http/owner/access-control.js')
-   .js('resources/js/http/owner/rooms.js', 'public/js/http/owner/rooms.js');
+   .js('resources/js/http/owner/rooms.js', 			'public/js/http/owner/rooms.js');
 
 mix.version();

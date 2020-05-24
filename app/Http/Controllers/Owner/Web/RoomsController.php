@@ -31,7 +31,7 @@ class RoomsController extends Controller{
 	
 	public function create(Request $r){
 		$location = Location::findByHash($r->input('location'));
-		//RoomService::make($location, $r->input('roomAttr'));
+		RoomService::make($location, $r->input('roomAttr'));
 		return redirect()->route('web.owner.room')
 			->with('preffered_location', $r->input('location'));
 	}
@@ -43,9 +43,13 @@ class RoomsController extends Controller{
 			return redirect()->route('web.owner.room');
 		}
 		
-		//RoomService::change($room, $r->input('roomAttr'));
+		RoomService::change($room, $r->input('roomAttr'));
 		return redirect()->route('web.owner.room')
 			->with('preffered_location', md5($room->location_id));
+	}
+	
+	public function lease(Request $r){
+		return $r;
 	}
 	
 }

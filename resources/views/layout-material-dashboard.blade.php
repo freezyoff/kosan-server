@@ -7,14 +7,14 @@
 	@yield("meta")
 	@stack("meta")
 	
-	<title>Kosan</title>
+	<title>Kosan - Hardware dan Software manajemen kosan</title>
 	
 	<!-- Begin: Fonts and icons -->
 	<link rel="apple-touch-icon" sizes="76x76" href="{{url('img/apple-icon.png')}}">
 	<link rel="icon" type="image/png" href="{{url('img/favicon.png')}}">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-	<link rel="stylesheet" href="{{url('vendor/material-dashboard/css/material-dashboard.min.css?v=2.1.0')}}" />
+	<link rel="stylesheet" href="{{url('vendor/material-dashboard/css/material-dashboard.min.css')}}" />
 	<link rel="stylesheet" href="{{url('css/brand.css')}}" />
 	<!-- End: Fonts and icons -->
 	
@@ -87,19 +87,20 @@
 				<div class="container-fluid">
 					<div class="copyright float-right">
 						&copy; 
-						<a href="https://www.creative-tim.com" target="_blank">Kosan.co.id</a> 
+						<a href="{{url('')}}" target="_blank">Kosan.co.id</a> 
 						{{date("Y")}}
 					</div>
 				</div>
 			</footer>
 			
 		</div>
+		
+		<!-- Begin: modal -->
+		@yield('modal')
+		@stack('modal')
+		<!-- End: modal -->
+		
 	</div>
-	
-	<!-- Begin: modal -->
-	@yield('modal')
-	@stack('modal')
-	<!-- End: modal -->
 	
 	<!-- Begin: scripts -->
 	<script src="{{url('vendor/material-dashboard/js/core/jquery.min.js')}}"></script>
@@ -114,6 +115,6 @@
 	@yield("scripts")
 	@stack("scripts")
 	<!-- End: scripts -->
+	
 </body>
-
 </html>

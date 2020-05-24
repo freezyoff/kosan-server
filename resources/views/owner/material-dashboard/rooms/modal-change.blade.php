@@ -10,12 +10,11 @@
 
 @push('modal')
 <!-- begin: owner/material-dashboard/access-control/modal-create-room -->
-<form id="{{$formID}}" action="{{route('web.owner.room.change')}}" method="post">
-@csrf
-<input name="room" type="hidden" value="{{md5($room->id)}}" />
-
 <div class="modal fade" id="{{$modalID}}" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-dialog modal-dialog-centered" role="document">
+	<form id="{{$formID}}" action="{{route('web.owner.room.change')}}" method="post">
+		@csrf
+		<input name="room" type="hidden" value="{{md5($room->id)}}" />
 		<div class="modal-content">
 			<div class="modal-header border-0 pt-0 pl-4 pr-4 pt-4 pb-0">
 				<h5 class="modal-title">
@@ -66,9 +65,9 @@
 				<button id="{{$saveBtnID}}" type="submit" class="btn btn-primary" disabled="disabled">Simpan</button>
 			</div>
 		</div>
-	</div>
+	</form>
 </div>
-</form>
+</div>
 @endpush
 
 @push('script')

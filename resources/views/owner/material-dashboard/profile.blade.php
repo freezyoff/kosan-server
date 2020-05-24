@@ -9,6 +9,13 @@
 
 @extends('owner.material-dashboard.dashboard', ['pageTitle'=>$pageTitle, 'href'=>$href])
 
+@push('style')
+<style>
+	td div i {font-size:1rem !important; cursor:pointer;}
+	.invalid {font-size:.8rem;}
+</style>
+@endpush
+
 @push('content')
 <!-- begin: owner.material-dashboard.profile -->
 <div class="row">
@@ -42,24 +49,34 @@
 			</div>
 		</div>
 	</div>
-<div>
+</div>
+<div class="row">
+	<div class="col">
+		@include('owner.material-dashboard.profile.location')
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		@include('owner.material-dashboard.profile.bank-accounts')
+	</div>
+</div>
 <!-- end: owner.material-dashboard.profile -->
 @endpush
 
 @push('modal')
 <!-- begin: owner.material-dashboard.profile -->
-<form>
-	@csrf
-	<div class="modal fade" id="{{$modalID}}" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header border-0">
-					<h5 class="modal-title">Ubah Sandi</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body border-0 pb-0">
+<div class="modal fade" id="{{$modalID}}" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header border-0">
+				<h5 class="modal-title">Ubah Sandi</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body border-0 pb-0">
+				<form>
+					@csrf
 					<div class="form-group">
 						<label>Sandi Baru</label>
 						<input name="pwd" type="password" class="form-control" />
@@ -68,19 +85,20 @@
 						<label>Konfirmasi Sandi</label>
 						<input name="confirm" type="password" class="form-control" />
 					</div>
-				</div>
-				<div class="modal-footer border-0 pt-0">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-					<button id="{{$btnSaveID}}" type="button" class="btn btn-primary">Simpan</button>
-				</div>
+				</form>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+				<button id="{{$btnSaveID}}" type="button" class="btn btn-primary">Simpan</button>
 			</div>
 		</div>
 	</div>
-</form>
+</div>
 <!-- end: owner.material-dashboard.profile -->
 @endpush
 
-@push('script')
+@prepend('script')
+<script src="{{mix('js/http/owner/profile.js')}}"></script>
 <script>
 // path: owner.material-dashboard.profile
 $(document).ready(function(){
@@ -95,4 +113,4 @@ $(document).ready(function(){
 	});
 });
 </script>
-@endpush
+@endprepend

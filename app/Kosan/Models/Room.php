@@ -37,6 +37,10 @@ class Room extends Model
 		return $this->belongsTo("\App\Kosan\Models\Location", "location_id", "id");
 	}
 	
+	public function accessControls(){
+		return $this->hasMany("\App\Kosan\Models\Relations\AccessControl", "room_id", "id");
+	}
+	
 	public static function findByLocation(Location $location){
 		if ($location){
 			return self::where("location_id", $location->id);

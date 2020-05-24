@@ -11,7 +11,7 @@ use App\Kosan\Models\Room;
 
 class LocationService{
 	
-	public function make(User $user, array $locationData, int $rooms){
+	public static function make(User $user, array $locationData, int $rooms){
 		//make location
 		$location = new Location($locationData);
 		$location->save();
@@ -22,6 +22,29 @@ class LocationService{
 		}
 		
 		return $location;
+	}
+	
+	public static function updateByLocationHash($locationHash, Array $fieldsAndValue){
+		$location = Location::findByHash($locationHash);
+		if ($location){
+			$location->fill($fieldsAndValue);
+			$location->save();
+			return true;
+		}
+		return false;
+	}
+	
+	public static function userLocations(){
+		$user = Auth::user();
+		if (!$user) {
+			return false;
+		}
+		
+		if ($user->hasOwnedLocations()){
+			return $user->locations();
+		}
+		
+		return false;
 	}
 	
 }
