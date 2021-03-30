@@ -31,6 +31,9 @@ class RedirectorController extends Controller{
 		
 		//user subcribe rooms, show room dashboard
 		else{
+			
+			//TODO: my.dashboard has no ssl certificate installed
+			//return $this->intended($target? $target : route('web.my.dashboard'));
 			return $this->intended($target? $target : route('web.my.dashboard'));
 		}
 	}

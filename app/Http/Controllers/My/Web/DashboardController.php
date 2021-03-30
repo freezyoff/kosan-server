@@ -5,96 +5,74 @@ namespace App\Http\Controllers\My\Web;
 use Illuminate\Http\Request;
 use Auth;
 use Str;
+use Storage;
 
 use App\Http\Controllers\Controller;
-use App\Models\Location;
+use App\Kosan\Models\Location;
+use App\Kosan\Models\Room;
 
 class DashboardController extends Controller{
 	
 	public function landing(){
-		$user = Auth::user();
+		$locationId = request('l');
+		$roomId = request('r');
+		
+		//check locationId if provided
+		if (strlen($locationId) > 0 && !Location::find2($locationId)){
+			abort(404);
+		}
+		
+		//check roomId if provided
+		if (strlen($roomId) > 0 && !Room::find2($roomId)){
+			abort(404);
+		}
+		
 		return view("my.material-dashboard.dashboard",[
-			//"page"=>false,
-			//"ownedLocationCount"=> $user->ownedLocations()->count(),
-			//"managedLocationCount"=> $user->managedLocations()->count(),
-			//"subscribedLocationCount"=>0
+			'selectedLocationId'=> 	$locationId,
+			'selectedRoomId'=> 		$roomId,
+			'user'=>				Auth::user()
 		]);
 	}
 	
+	public function getMqttListener($roomIdHash){
 	
-	public function accessibilitiesPage(){
-		//generate locations
-		$locations = [];
-		foreach(Auth::user()->accessibilities()->get() as $acc){
-			if ($acc->isExpired()){
-				continue;
-			}
-			$devAcc = $acc->deviceAccessibility()->first();
-			$dev	= $devAcc->device()->first();
-			$loc   	= $dev->location()->first();
-			$locations[$loc->id] = $loc;
-		}
+		$topics = [
+			//"kosan/user/<email-md5>/room/<roomid-md5>"
+			"kosan/user/?/room/?",
+			
+			//"kosan/user/<email-md5>/room/<roomid-md5>/command/executed"
+			"kosan/user/?/room/?/command/executed",
+			
+			//"kosan/user/<email-md5>/room/<roomid-md5>/command"
+			"kosan/user/?/room/?/command"
+		];
+		$subscribes = [
+			Str::replaceArray("?", [md5(Auth::user()->email), $roomIdHash.""], $topics[0]),
+			Str::replaceArray("?", [md5(Auth::user()->email), $roomIdHash.""], $topics[1])
+		];
+		$publishes = [
+			Str::replaceArray("?", [md5(Auth::user()->email), $roomIdHash.""], $topics[2]),
+		];
 		
-		// creating custom encrypter
-		$key = Str::random(32);
-		$newEncrypter = new \Illuminate\Encryption\Encrypter( $key, config( 'app.cipher' ) );
+		//for security, we use api_token as password
+		Auth::user()->renewApiToken();
+		$websocket_username = strtolower(Auth::user()->email).'@websocket';
+		$websocket_password = Auth::user()->api_token;
 		
-		return view('my.dashboard.sm-accessibilities', [
-			'page'=>'accessibilities',
-			'locations'=>$locations,
-			'cipher_key'=> $key,
-			'topics'=> base64_encode(json_encode([
-				"pub_auth"=> 				$newEncrypter->encrypt("kosan/user/auth/". Auth::user()->email ."/". Auth::user()->plainPassword()),
-				"sub_auth"=> 				$newEncrypter->encrypt("kosan/user/config/". md5(Auth::user()->email)),
-				"sub_user_access_state"=> 	$newEncrypter->encrypt("kosan/user/<api_token>/accessibility/<md5_user_accessibility_id>"),
-				"pub_access_command"=> 		$newEncrypter->encrypt("kosan/user/<api_token>/accessibility/<md5_user_accessibility_id>/signal/<unsigned_int_signal>"),
-			], JSON_HEX_QUOT)),
-			'allKeys'=> $this->accessibilitiesByLocation(),
+		//change password in mosquitto passwd file before http response
+		\Artisan::call('mosquitto:add-user', [
+			'user' 	  => $websocket_username,
+			'pwd' 	  => $websocket_password
 		]);
-	}
-	
-	public function accessibilitiesByLocation($locationID = false){
-		// no $locationID provided
-		// return all
-		if (!$locationID) {
-			$result = "";
-			foreach(Auth::user()->accessibilities()->get() as $acc){
-				$result .= view('my.dashboard.accessibilities.sm-key',[
-					'accessibility'=>$acc
-				])->render();
-			}
-			return $result;
-		}
 		
-		$location = Location::find($locationID);
-		if (!$location) return "";
-			
-		//assume has location id
-		$result = "";
-		foreach(Auth::user()->accessibilities()->get() as $acc){
-			if ($acc->isExpired()){
-				continue;
-			}
-			
-			$devAcc = $acc->deviceAccessibility()->first();
-			$dev	= $devAcc->device()->first();
-			$loc   	= $dev->location()->first();
-			
-			if ($loc->id != $locationID){
-				continue;
-			}
-			
-			$result .= view('my.dashboard.accessibilities.sm-key',[
-				'accessibility'=>$acc
-			])->render();
-		}
-		
-		return $result;
-	}
-	
-	public function settingPage(){
-		return view('my.dashboard', [
-			'page'=>'setting',
+		return response()->json([
+			'port'=> 	 	9883,
+			'host'=> 	 	'mqtt.kosan.co.id',
+			'username'=> 	$websocket_username,
+			'password'=> 	$websocket_password,
+			'ca'=>		 	Storage::get('cert/SHA-2.Root.USERTrust.RSA.CA.crt'),
+			'subscribes'=>	$subscribes,
+			'publishes'=>	$publishes,
 		]);
 	}
 	

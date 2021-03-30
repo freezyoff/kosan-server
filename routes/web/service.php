@@ -101,13 +101,23 @@ Route::prefix("resource")
 			});
 		
 	});
-	
-Route::get("markdown/test", function(){
-	$message = (new \App\Notifications\RegisterEmailNotification([
-		"name"=>'123',
-		"email"=>'asdasdsadasdsad',
-		'password'=>'1231232132',
-		'activationToken'=>'asdsadsadsa'
-	]))->toMail('test@email.com');
-	return $message;
+
+//TODO: remove this when APK Released on google play store
+Route::get("apk/download", function(){
+	return response()->file(app_path("../storage/app/apk/app-debug.apk") ,[
+		'Content-Type'=>'application/vnd.android.package-archive',
+		'Content-Disposition'=> 'attachment; filename="android.apk"',
+	]);
 });
+
+//TODO: remove this when subdomain my.kosan.co.id has SSL Installed
+Route::prefix('access')
+	->middleware("auth")
+	->namespace("\App\Http\Controllers\My\Web")
+	->group(function(){
+		
+		Route::get("", "DashboardController@landing")->name("web.my.dashboard");
+		Route::get("listener/{roomid}", "DashboardController@getMqttListener")->name("web.my.dashboard.listener");
+		
+	});
+	

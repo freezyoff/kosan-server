@@ -13,7 +13,7 @@
 		<div class="modal-content">
 		<form id="{{$formID}}" 
 			method="post" 
-			action="{{route('web.owner.room.lease')}}" 
+			action="{{route('web.owner.rooms.lease')}}" 
 			class="m-0"
 			validation>
 			@csrf

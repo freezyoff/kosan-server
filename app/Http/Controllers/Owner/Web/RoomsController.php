@@ -48,6 +48,11 @@ class RoomsController extends Controller{
 			->with('preffered_location', md5($room->location_id));
 	}
 	
+	public function accessList($roomHash){
+		$room = Room::findByHash($roomHash);
+		return $room;
+	}
+	
 	public function lease(Request $r){
 		return $r;
 	}

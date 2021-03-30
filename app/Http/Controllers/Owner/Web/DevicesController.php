@@ -33,13 +33,23 @@ class DevicesController extends Controller{
 			}
 		}
 		
+		//for security, we use api_token as password
+		Auth::user()->renewApiToken();
+		$websocket_username = strtolower(Auth::user()->email).'@websocket';
+		$websocket_password = Auth::user()->api_token;
+		
+		//change password in mosquitto passwd file before http response
+		\Artisan::call('mosquitto:add-user', [
+			'user' 	  => $websocket_username,
+			'pwd' 	  => $websocket_password
+		]);
 		
 		return response()->json([
-			'port'=> 	 	9883,//8883,
+			'port'=> 	 	9883,
 			'host'=> 	 	'mqtt.kosan.co.id',
-			'username'=> 	Auth::user()->email,
-			'password'=> 	Auth::user()->created_at->format('Y-m-d H:i:s'),
-			'ca'=>		 	Storage::get('cert/mqtt.kosan.co.id.crt'),
+			'username'=> 	$websocket_username,
+			'password'=> 	$websocket_password,
+			'ca'=>		 	Storage::get('cert/SHA-2.Root.USERTrust.RSA.CA.crt'),
 			'subscribes'=>	$subscribes
 		]);
 	}
@@ -105,6 +115,12 @@ class DevicesController extends Controller{
 	public function accessControlChangeRoom(Request $request){
 		$accessCtrl = AccessControl::findByHash($request->input("accessCtrl"));
 		DeviceService::changeAccessControlRoom($accessCtrl, $request->input("room"));
+		return redirect()->route("web.owner.access-control", ["macHash"=>$request->input("device")]);
+	}
+	
+	public function accessControlDisconnectRoom(Request $request){
+		$accessCtrl = AccessControl::findByHash($request->input("accessCtrl"));
+		DeviceService::disconnectAccessControlRoom($accessCtrl);
 		return redirect()->route("web.owner.access-control", ["macHash"=>$request->input("device")]);
 	}
 	

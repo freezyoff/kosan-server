@@ -50,6 +50,15 @@ class DeviceService{
 		return false;
 	}
 	
+	public static function disconnectAccessControlRoom(AccessControl $accessCtrl){
+		if ($accessCtrl){			
+			$accessCtrl->room_id = null;
+			$accessCtrl->save();
+			return true;
+		}
+		return false;
+	}
+	
 	public static function createAccessControlRoom(AccessControl $accessCtrl, $roomAttr){
 		//make room
 		$room = RoomService::make($accessCtrl->device->location, $roomAttr);

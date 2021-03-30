@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 use App\User as BaseModel;
-
+use App\Kosan\Models\Location as LocationModel;
 
 class User extends BaseModel
 {
@@ -92,13 +92,32 @@ class User extends BaseModel
 	//
 	//room_users relation
 	//
-	public function roomSubscriptions(){
+	public function subscribedLocations(){
+		$location = [];
+		$sql = $this->subscriptions();
+		$sql = $sql->whereRaw("? BETWEEN valid_after and DATE_ADD(valid_before, INTERVAL grace_periode DAY)", [now()->toDateTimeString()]);
+		foreach($sql->get() as $rooms){
+			$location[$rooms->location_id] = $rooms->location_id;
+		}
+		return LocationModel::whereIn('id', $location);
+	}
+	
+	public function subscribedRooms($locationId){
+		$rooms = [];
+		$sql = $this->subscriptions();
+		$sql = $sql->whereRaw("? BETWEEN valid_after and DATE_ADD(valid_before, INTERVAL grace_periode DAY)", [now()->toDateTimeString()]);
+		$sql = $sql->where('location_id', $locationId);
+		return $sql;
+	}
+	
+	public function subscriptions(){
 		return $this->belongsToMany(
 			"App\Kosan\Models\Room",  
 			"room_users",
 			"user_id", 
 			"room_id"
-		)->using("App\Kosan\Models\Relations\RoomUser");
+		)->using("App\Kosan\Models\Relations\RoomUser")
+		->withPivot(['id', 'valid_after', 'valid_before', 'grace_periode']);
 	}
 	
 	//
@@ -109,11 +128,13 @@ class User extends BaseModel
 	}
 	
 	public function hasRoomSubscriptions(){
-		return $this->roomSubscriptions()->count() > 0;
+		return $this->subscriptions()->count() > 0;
 	}
 	
 	public static function findByEmail($email){
-		return User::where('email',strtolower($email))->first();
+		return User::where('email',strtolower($email))
+					->orWhereRaw("MD5(`email`) = ?",[$email])
+					->first();
 	}
 	
 	public static function findByApiToken($token){

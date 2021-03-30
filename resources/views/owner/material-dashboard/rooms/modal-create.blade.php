@@ -11,7 +11,7 @@
 <!-- begin: owner/material-dashboard/access-control/modal-create-room -->
 <div class="modal fade" id="{{$modalID}}" tabindex="-1" role="dialog" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered" role="document">
-	<form id="{{$formID}}" action="{{route('web.owner.room.create')}}" method="post">
+	<form id="{{$formID}}" action="{{route('web.owner.rooms.create')}}" method="post">
 		@csrf
 		<input id="{{$formID}}-location" name="location" type="hidden" value="" />
 	

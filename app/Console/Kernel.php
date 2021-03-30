@@ -20,8 +20,16 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Mosquitto\Reload::class,
 		\App\Console\Commands\Mosquitto\AddUser::class,
 		
+		//package: App\Console\Commands\Kosan
 		\App\Console\Commands\Kosan\KosanServer_Restart::class,
 		\App\Console\Commands\Kosan\UpdateRegionTable::class,
+		
+		//package: App\Console\Commands\Kosan\User
+		\App\Console\Commands\Kosan\User\Register::class,
+		\App\Console\Commands\Kosan\User\ChangePassword::class,
+		
+		//package: App\Console\Commands\Kosan\Device
+		\App\Console\Commands\Kosan\Device\Replace::class,
     ];
 
     /**

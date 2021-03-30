@@ -53,6 +53,30 @@
 				@include("owner.material-dashboard.access-control.modal-change-room", ["modalID"=>$modalID, "accessCtrl"=>$item])
 			@endpush
 			{{-- end: change room --}}
+			
+			{{-- begin: disconnect room --}}
+			@php 
+				$modalID = "_".\Str::random();
+			@endphp 
+			<a href="#{{$modalID}}" data-toggle="modal">
+				<i title="Putuskan kamar terhubung"
+					@if ($item->room_id)
+						class="material-icons ml-2 text-danger"
+					@else
+						class="material-icons ml-2 text-danger invisible"
+					@endif
+					data-toggle="tooltip"
+					data-placement="top"
+					>
+					disabled_by_default
+				</i>
+			</a>
+			@if ($item->room_id)
+				@push("modal")
+					@include("owner.material-dashboard.access-control.modal-disconnect-room", ["modalID"=>$modalID, "accessCtrl"=>$item])
+				@endpush
+			@endif
+			{{-- end: disconnect room --}}
 		</div>
 	</td>
 </tr>

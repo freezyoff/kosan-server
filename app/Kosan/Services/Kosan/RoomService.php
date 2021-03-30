@@ -35,7 +35,7 @@ class RoomService {
 	
 	public static function lease(Room $room, $userInfo){
 		//we required email
-		if (!array_key_exists('email', $userInfo){
+		if (!array_key_exists('email', $userInfo)){
 			return false;
 		}
 		
@@ -43,7 +43,7 @@ class RoomService {
 		$user = User::findByEmail($userInfo['email']);
 		
 		//create user if not registered yet
-		if (!$user)}{
+		if (!$user){
 			$user = UserService::make($userInfo['name'], $userInfo['email'], Str::random(8));
 		}
 		

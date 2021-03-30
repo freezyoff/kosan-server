@@ -18,7 +18,7 @@ const ShellFactory = Kosan.ShellFactory,
 			else if (topic[6] == 'config') this.updateStateConfig(message.toString());
 			else if (topic[6] == 'io') {
 				let pp = message.toString().split("\n");
-				console.log(pp);
+				//console.log(pp);
 			}
 		},
 		updateStateOS: function(msgStr){
@@ -256,7 +256,7 @@ const ShellFactory = Kosan.ShellFactory,
 			let label = $("#sys-wan-ssid");
 			let inpContainer = $(".sys-wan-ssid-lp");
 			let labelContainer = $(".sys-wan-ssid-lb").click(function(){
-				console.log(label.html().trim());
+				//console.log(label.html().trim());
 				inp.val(label.html().trim());
 				labelContainer.addClass('d-none')
 				inpContainer.removeClass('d-none');

@@ -2,7 +2,7 @@
 	<div class="col-sm d-none d-md-block"></div>
 	<div class="col-sm col-md-8 col-lg-6">
 		<!-- Begin: -->
-		<div class="mt-5 d-block">
+		<div class="mt-5 d-block" style="margin-top:6em !important">
 			
 			<div class="col brand cursor-pointer text-center mx-auto" 
 				style="font-size:2.2rem !important" 
@@ -62,15 +62,21 @@
 							</div>
 						</div>
 					</div>
+					
+					{{--
 					<div class="row">
 						<a href="{{route('web.service.auth.forgot')}}" class="text-warning mt-2">Lupa password?</a>
 					</div>
+					--}}
+					
 					<div class="row mt-3">
 						<button type="submit" class="btn btn-primary btn-block">Masuk</button>
 					</div>
 				</div>
 			</form>
-			
+
+			{{-- @TODO: implement this --}}
+			{{--
 			<button id="oauth-google-xs-sm" 
 				type="button" 
 				class="btn btn-light btn-block d-flex align-items-center mt-3">
@@ -96,6 +102,8 @@
 				onclick="window.location='{{route('web.service.auth.register')}}'">
 				<div style="flex-grow:1">Daftar</div>
 			</button>
+			--}}
+
 		</div>
 		<!-- End: -->
 	</div>

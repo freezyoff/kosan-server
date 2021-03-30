@@ -14,7 +14,7 @@ class AddUser extends Command
      *
      * @var string
      */
-    protected $signature = 'mosquitto:adduser 
+    protected $signature = 'mosquitto:add-user 
 							{user : mqtt user name} 
 							{pwd : mqtt password}';
 
@@ -42,6 +42,7 @@ class AddUser extends Command
      */
     public function handle()
     {
+		/*
 		$pwdFile = config("kosan.mqtt_password_file");
 		$user = $this->argument("user");
 		$pwd = $this->argument("pwd");
@@ -52,6 +53,26 @@ class AddUser extends Command
 		    throw new ProcessFailedException($process);
 		}
 		
+		$this->call('mosquitto:reload', []);
+		*/
+		
+		$user = $this->argument("user");
+		$pwd = $this->argument("pwd");
+		
+		$cmd = "su -c 'mosquitto_passwd -b ? ? ?' < ?";
+		$seed = [
+			config("kosan.mqtt_password_file"),
+			$user,
+			$pwd,
+			config("kosan.sudoer_password_file")
+		];
+		$cmd = Str::replaceArray('?', $seed, $cmd);
+		
+		$process = new Process( $cmd );
+		$process->run();
+		if (!$process->isSuccessful()) {
+		    throw new ProcessFailedException($process);
+		}
 		$this->call('mosquitto:reload', []);
     }
 }

@@ -28,6 +28,7 @@
 </head>
 <body class="">
 	<div class="wrapper ">
+		
 		<div class="sidebar" data-color="purple" data-background-color="white" data-image="{{url('vendor/material-dashboard/img/sidebar-2.jpg')}}">
 			<div class="logo">
 				<a href="{{url("")}}" class="simple-text logo-normal brand" style="font-size:1.7rem">
@@ -41,7 +42,7 @@
 				</ul>
 			</div>
 		</div>
-    
+		
 		<div class="main-panel">
 		
 			<!-- Navbar -->
@@ -68,6 +69,7 @@
 						<span class="navbar-toggler-icon icon-bar"></span>
 						<span class="navbar-toggler-icon icon-bar"></span>
 					</button>
+					
 					<div class="collapse navbar-collapse justify-content-end">
 					</div>
 				</div>

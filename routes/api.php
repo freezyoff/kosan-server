@@ -15,6 +15,5 @@ use Illuminate\Http\Request;
 
 $domain = config("app.url");
 
-Route::domain("services.$domain")
-	->middleware("kosan>>api.only")
+Route::domain("service.$domain")
 	->group(base_path("routes/api/services.php"));

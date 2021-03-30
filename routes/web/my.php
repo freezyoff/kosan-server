@@ -55,15 +55,16 @@ Route::prefix("owned")
 	->namespace('My\Web')
 	->group(function(){
 		
+		/*
 		Route::get("", "OwnedController@landing")
 			->name("web.my.owned");
-			
 		Route::prefix("location")
 			->group(function(){
 				Route::get("make", "Owned\LocationController@makeForm")->name("web.my.owned.make");
 				Route::post("make", "Owned\LocationController@make");
 			});
 		
+		*/
 	});
 	
 Route::prefix("resource")

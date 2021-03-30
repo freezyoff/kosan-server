@@ -30,11 +30,12 @@
 			
 				@if ($deviceLocationSet)
 					<ul class="nav flex-column">
-						@forelse(\App\Kosan\Models\Room::findByLocation($device->location)->get() as $room)
+						@forelse(\App\Kosan\Models\Room::findByLocation($device->location)->orderBy('name')->get() as $room)
 							<li class="nav-item border-top pl-2">
-								<form class="m-0"
+								<form class="m-0" 
 									method="post" 
-									action="{{route('web.owner.access-control.change.room')}}">
+									action="{{route('web.owner.access-control.change.room')}}"
+									>
 									@csrf
 									<input name="device" type="hidden" value="{{md5($device->mac)}}" />
 									<input name="accessCtrl" type="hidden" value="{{md5($accessCtrl->id)}}" />

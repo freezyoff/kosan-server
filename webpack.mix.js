@@ -5,21 +5,21 @@ if (mix.inProduction()) {
 	mix.webpackConfig({
 		plugins: [
 			new JavaScriptObfuscator ({
-				//deadCodeInjection: true,
-				//deadCodeInjectionThreshold: 0.4,
+				deadCodeInjection: true,
+				deadCodeInjectionThreshold: 0.4,
 				//debugProtectionInterval: false,
-				//disableConsoleOutput: true,
-				//identifierNamesGenerator: 'hexadecimal',
-				//renameGlobals: false,
-				//rotateStringArray: true,
-				//shuffleStringArray: true,
-				//splitStrings: true,
-				//splitStringsChunkLength: 10,
-				//stringArray: true,
-				//stringArrayEncoding: 'base64',
-				//stringArrayThreshold: 0.75,
-				//unicodeEscapeSequence: false,
-				debugProtection: true,
+				disableConsoleOutput: true,
+				identifierNamesGenerator: 'hexadecimal',
+				renameGlobals: true,
+				rotateStringArray: true,
+				shuffleStringArray: true,
+				splitStrings: true,
+				splitStringsChunkLength: 10,
+				stringArray: true,
+				stringArrayEncoding: 'base64',
+				stringArrayThreshold: 0.75,
+				unicodeEscapeSequence: false,
+				//debugProtection: true,
 				compact: true,
 				controlFlowFlattening: true,
 				controlFlowFlatteningThreshold: 0.75,
@@ -50,9 +50,10 @@ if (mix.inProduction()) {
  |
  */
 
-mix.sass('resources/sass/app.scss', 'public/css/app.css')
-	.sass('resources/sass/brand.scss', 'public/css/brand.css')
-	.sass('resources/sass/circular-progressbar.scss', 'public/css/circular-progressbar.css')
+mix.sass('resources/sass/app.scss', 					'public/css/app.css')
+	.sass('resources/sass/brand.scss', 					'public/css/brand.css')
+	.sass('resources/sass/circular-progressbar.scss', 	'public/css/circular-progressbar.css')
+	.sass('resources/sass/spinner.scss', 				'public/css/spinner.css')
 	.copy('resources/img', 'public/img');
 	
 //
@@ -78,10 +79,16 @@ mix.js('resources/js/app.js', 'public/js')
 //
 //domain: Owner
 //
-mix.js('resources/js/http/owner/profile.js', 			'public/js/http/owner/profile.js')
+mix.js('resources/js/http/owner/profile.js', 		'public/js/http/owner/profile.js')
 	.js('resources/js/http/owner/device-info.js', 	'public/js/http/owner/device-info.js')
    .js('resources/js/http/owner/devices.js', 		'public/js/http/owner/devices.js')
    .js('resources/js/http/owner/access-control.js', 'public/js/http/owner/access-control.js')
-   .js('resources/js/http/owner/rooms.js', 			'public/js/http/owner/rooms.js');
+   .js('resources/js/http/owner/rooms.js', 			'public/js/http/owner/rooms.js')
+   .js('resources/js/http/owner/rooms-access.js', 	'public/js/http/owner/rooms-access.js');
+
+//
+//domain: My
+//
+mix.js('resources/js/http/my/dashboard.js', 		'public/js/http/my/dashboard.js');
 
 mix.version();

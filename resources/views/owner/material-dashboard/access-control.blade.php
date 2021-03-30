@@ -33,9 +33,9 @@ $(document).ready(function(){
 <div class="row">
 	<div class="col-sm-12">
 		<div class="card card-stats">
-			<div class="card-header card-header-secondary card-header-icon">
-				<div class="card-icon text-white">
-					<i class="material-icons">sync</i>
+			<div class="card-header card-header-warning card-header-icon">
+				<div class="card-icon">
+					<i class="material-icons">gamepad</i>
 				</div>
 				@if ($device->alias)
 					<p class="card-category">Nama Perangkat</p>

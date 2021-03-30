@@ -3,9 +3,12 @@
 namespace App\Kosan\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Kosan\Models\Contracts\FindByPlainOrHashIdentifier;
 
 class Location extends Model
 {
+	use FindByPlainOrHashIdentifier;
+	
     protected $connection = 'kosan_kosan';
 	protected $table = "locations";
     protected $fillable = [
@@ -30,7 +33,4 @@ class Location extends Model
 		return $this->belongsTo("App\Kosan\Models\User", "pic_user_id", "id");
 	}
 	
-	public static function findByHash($hash){
-		return self::whereRaw("MD5(`id`) = '$hash'")->first();
-	}
 }

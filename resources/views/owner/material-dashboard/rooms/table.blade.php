@@ -4,9 +4,12 @@
 			<tr>
 				<th>Kamar</th>
 				<th>Perangkat</th>
+				{{--
 				<th class="text-right">Harian (Rp.)</th>
 				<th class="text-right">Mingguan (Rp.)</th>
 				<th class="text-right">Bulanan (Rp.)</th>
+				--}}
+				<th>Konektifitas</th>
 				<th class="text-right">&nbsp;</th>
 			</tr>
 		</thead>
@@ -25,15 +28,20 @@
 						@php 
 							$accDevice = $acc->first()->device()->first();
 						@endphp
-						@if ($accDevice->alias)
-							{{$accDevice->alias}}
-						@else
-							{{$accDevice->mac}}
-						@endif
+						<button class="btn btn-info btn-sm" 
+							onclick="document.location='{{route('web.owner.device',[md5($accDevice->mac)])}}'">
+							@if ($accDevice->alias)
+								{{$accDevice->alias}}
+							@else
+								{{$accDevice->mac}}
+							@endif
+						</button>
 					@else
 						tidak terhubung
 					@endif
 				</td>
+				
+{{--
 				<td class="text-right">
 					@if ($room->rate_daily)
 						{{number_format($room->rate_daily,0,'.',',')}}
@@ -55,15 +63,17 @@
 						-
 					@endif
 				</td>
-				<td class="text-right">
-					<div class="d-flex align-items-center justify-content-end">
+--}}
+				<td>
+					<div class="d-flex">
 					
 						{{-- begin: change button --}}
 						@php 
 							$modalID = "_".\Str::random();
 						@endphp
 						<a href="#{{$modalID}}" data-toggle="modal">
-							<i class="material-icons ml-1" 
+							<i class="material-icons" 
+								style="min-width:24px"
 								data-toggle="tooltip" 
 								data-placement="top" 
 								title="Ubah data">
@@ -78,7 +88,8 @@
 							$modalID = "_".\Str::random();
 						@endphp
 						<a href="#{{$modalID}}" data-toggle="modal">
-							<i class="material-icons ml-1" 
+							<i class="material-icons" 
+								style="min-width:24px"
 								data-toggle="tooltip" 
 								data-placement="top" 
 								title="Sewakan">
@@ -88,6 +99,19 @@
 						@include('owner.material-dashboard.rooms.modal-subscription', ["modalID"=>$modalID, "room"=>$room])
 						{{-- end: subscription button --}}
 						
+						@php 
+							$modalID = "_".\Str::random();
+						@endphp
+						<a href="{{route('web.owner.rooms.access.histories', [md5($room->id)])}}">
+							<i class="material-icons" 
+								style="min-width:24px; font-weight:900"
+								data-toggle="tooltip" 
+								data-placement="top" 
+								data-offset="10px"
+								title="Daftar Akses Kamar">
+								login
+							</i>
+						</a>
 					</div>
 				</td>
 			</tr>							

@@ -6,11 +6,14 @@ require('../utils/datetime.js');
 require('../utils/string.js');
 
 let ServerMQTTClient = null;
-const Shell = require("./shell/Shell.js"),
+const Shell 	= require("./shell/Shell.js"),
 	ShellOS 	= require("./shell/ShellOS.js"),
 	ShellNTP 	= require("./shell/ShellNTP.js"),
 	ShellWifiST = require("./shell/ShellWifiST.js"),
 	ShellWifiAP = require("./shell/ShellWifiAP.js"),
+	
+	ShellAccessControlSignal = require("./shell/ShellAccessControlSignal.js"),
+	
 	ServerListenerImpl = function(options, onMessageArriveCallback){
 		ServerMQTTClient = MQTT.connect({
 			port: options.port,
@@ -46,21 +49,25 @@ if (!window.Kosan){
 }
 
 Kosan.ShellFactory = {
+	make: 		function(str){ return new Shell(str); },
 	makeOS: 	function(str){ return ShellOS.fromStr(str); },
 	makeNTP: 	function(str){ return ShellNTP.fromStr(str); },
 	makeWifiST: function(str){ return ShellWifiST.fromStr(str); },
-	makeWifiAP: function(str){ return ShellWifiAP.fromStr(str); }
+	makeWifiAP: function(str){ return ShellWifiAP.fromStr(str); },
+	
+	makeAccessControlSignal: function(str){ return ShellAccessControlSignal.fromStr(str); },
 };
 
 Kosan.Server = {
+	loadConfig: function(url, callback){
+		$.getJSON(url, callback);
+	},
 	listen: function(url, onMessageArriveCallback){
-		$.getJSON(url, function( data ) {
+		this.loadConfig(url, function( data ) {
 			ServerListenerImpl(data, onMessageArriveCallback);
 		});
 	},
 	send: function(topic, message){
-		console.log("topic\n",">>" +topic);
-		console.log("message\n",">>" +message);
 		ServerMQTTClient.publish(topic, message, 1);
 	}
 };

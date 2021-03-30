@@ -4,10 +4,13 @@ namespace App\Kosan\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Kosan\Models\Contracts\FindByPlainOrHashIdentifier;
 use \App\Kosan\Models\Location;
 
 class Room extends Model
 {
+	use FindByPlainOrHashIdentifier;
+	
     protected $connection = 'kosan_kosan';
 	protected $table = "rooms";
     protected $fillable = [
@@ -47,8 +50,5 @@ class Room extends Model
 		}
 		return null;
 	}
-	
-	public static function findByHash($hash){
-		return self::whereRaw("MD5(id) = '$hash'")->first();
-	}
+
 }
